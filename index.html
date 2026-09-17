@@ -50,7 +50,28 @@
   .badge .dot{width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 2s infinite;}
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
   @media (prefers-reduced-motion: reduce){ .badge .dot{animation:none;} }
-  .sub-note{color:var(--text-muted); font-size:12.5px; margin-bottom:22px;}
+  .sub-note{color:var(--text-muted); font-size:12.5px; margin-bottom:16px;}
+
+  .date-bar{
+    display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px;
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:12px 16px; margin-bottom:22px; box-shadow:var(--shadow);
+  }
+  .date-field{display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--text-secondary); font-weight:600;}
+  .date-field input{
+    font-family:"IBM Plex Mono", monospace; font-size:13px; color:var(--text-primary);
+    background:var(--surface-2); border:1px solid var(--border); border-radius:7px; padding:5px 8px;
+  }
+  .date-reset{
+    appearance:none; border:1px solid var(--border); background:var(--surface-2); cursor:pointer;
+    font-family:"IBM Plex Sans", sans-serif; font-weight:600; font-size:12px; color:var(--text-secondary);
+    padding:6px 12px; border-radius:999px;
+  }
+  .date-reset:hover{color:var(--text-primary); border-color:var(--text-muted);}
+  .date-range-note{font-size:11.5px; color:var(--text-muted); margin-left:auto; font-family:"IBM Plex Mono", monospace;}
+
+  .view{display:none;}
+  .view.active{display:block;}
 
   .kpi-row{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px; margin-bottom:22px;}
   @media (max-width:760px){ .kpi-row{grid-template-columns:repeat(2, minmax(0,1fr));} }
@@ -64,22 +85,31 @@
 
   .section-title{font-size:14px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em; margin:0 0 12px;}
 
-  .jump-nav{
-    display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;
-    position:sticky; top:0; z-index:5; background:var(--bg);
-    padding-block:10px; margin-inline:-20px; padding-inline:20px;
-    border-bottom:1px solid var(--border);
-  }
-  .jump-chip{
-    appearance:none; border:1px solid var(--border); background:var(--surface); cursor:pointer;
-    font-family:"IBM Plex Sans", sans-serif; font-weight:600; font-size:12.5px; color:var(--text-secondary);
-    padding:6px 12px; border-radius:999px; display:inline-flex; align-items:center; gap:7px;
-  }
-  .jump-chip:hover{color:var(--text-primary); border-color:var(--text-muted);}
-  .jump-chip .sw{width:8px; height:8px; border-radius:3px; flex:none;}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px; box-shadow:var(--shadow);}
 
-  .company-section{scroll-margin-top:56px; margin-bottom:34px; padding-top:6px;}
-  .company-section + .company-section{border-top:1px solid var(--border); padding-top:28px;}
+  .table-wrap{overflow-x:auto;}
+  table.cmp{width:100%; border-collapse:collapse; font-size:13.5px; min-width:620px;}
+  table.cmp th, table.cmp td{padding:11px 12px; text-align:right; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums;}
+  table.cmp th:first-child, table.cmp td:first-child{text-align:left;}
+  table.cmp th{color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:0.04em; font-weight:700;}
+  table.cmp td{font-family:"IBM Plex Mono", monospace;}
+  table.cmp td:first-child{font-family:"IBM Plex Sans", sans-serif; font-weight:600;}
+  table.cmp tbody tr{cursor:pointer;}
+  table.cmp tbody tr:hover{background:var(--surface-2);}
+  table.cmp tbody tr:last-child td{border-bottom:none;}
+  .co-name{display:flex; align-items:center; gap:9px;}
+  .sw{width:9px; height:9px; border-radius:3px; flex:none;}
+  .pct-good{color:var(--good); font-weight:600;}
+  .pct-bad{color:var(--critical); font-weight:600;}
+  .row-arrow{color:var(--text-muted);}
+
+  .back-btn{
+    appearance:none; border:1px solid var(--border); background:var(--surface); cursor:pointer;
+    font-family:"IBM Plex Sans", sans-serif; font-weight:600; font-size:13px; color:var(--text-secondary);
+    padding:8px 14px; border-radius:9px; margin-bottom:16px; display:inline-flex; align-items:center; gap:6px;
+  }
+  .back-btn:hover{color:var(--text-primary); border-color:var(--text-muted);}
+
   .detail-head{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
   .detail-head .swatch{width:14px; height:14px; border-radius:4px;}
   .detail-head h2{font-size:22px; font-weight:800;}
@@ -112,31 +142,120 @@
     <h1>GM Clients Performance</h1>
     <span class="badge"><span class="dot"></span><span id="asOf">Loading&hellip;</span></span>
   </div>
-  <div class="sub-note">Auto-refresh every ~10 minutes mula sa live order data ng 6 companies &middot; lahat ng company visible, i-click ang chip para mag-jump.</div>
+  <div class="sub-note">Auto-refresh every ~10 minutes mula sa live order data ng 6 companies &middot; i-click ang row para makita ang Top 5 Products per region.</div>
+
+  <div class="date-bar">
+    <div class="date-field">Mula <input type="date" id="dateFrom"></div>
+    <div class="date-field">Hanggang <input type="date" id="dateTo"></div>
+    <button class="date-reset" id="dateReset">Month to Date</button>
+    <span class="date-range-note" id="rangeNote"></span>
+  </div>
 
   <div id="loadNote" class="load-note">Kinukuha yung datos&hellip;</div>
 
-  <nav class="jump-nav" id="jumpNav" hidden></nav>
+  <div class="view" id="view-overview">
+    <div class="kpi-row" id="ov-kpis"></div>
+    <div class="card table-wrap">
+      <div class="section-title">Performance per Company</div>
+      <table class="cmp">
+        <thead><tr><th>Company</th><th>Total Sales</th><th>Total Orders</th><th>Delivery %</th><th>RTS %</th><th></th></tr></thead>
+        <tbody id="cmp-body"></tbody>
+      </table>
+    </div>
+  </div>
 
-  <div id="ov-kpis" class="kpi-row"></div>
+  <div class="view" id="view-detail">
+    <button class="back-btn" id="backBtn">&larr; Overview</button>
+    <div class="detail-head"><span class="swatch" id="detailSwatch"></span><h2 id="detailName"></h2></div>
+    <div class="kpi-row" id="detail-kpis"></div>
+    <div class="section-title">Top 5 Products per Region</div>
+    <div class="region-grid" id="detail-regions"></div>
+  </div>
 
-  <div id="companies-all"></div>
-
-  <footer>Sales = Unit price ng Delivered orders &middot; Total Orders = Shipped + Returning + Returned + Returned (fee) + Delivered &middot; Delivery% at RTS% batay dito, kasama per-product breakdown sa region view</footer>
+  <footer>Sales = Unit price ng Delivered orders &middot; Total Orders = Shipped + Returning + Returned + Returned (fee) + Delivered &middot; Batay sa "Day created" ng order &middot; Delivery% at RTS% kasama per-product breakdown sa region view</footer>
 </div>
 
 <script>
 const REGIONS = ["NCR","Luzon","Visayas","Mindanao"];
 const SLOTS = ["s1","s2","s3","s4","s5","s6"];
-const REFRESH_MS = 60_000;
+const REFRESH_MS = 180_000;
 
 let DATA = null;
 let COMPANY_COLORS = {};
+let currentCompany = null;
+let firstLoad = true;
 
 function peso(n){ return new Intl.NumberFormat('en-PH', {style:'currency', currency:'PHP', maximumFractionDigits:0}).format(n); }
 function num(n){ return new Intl.NumberFormat('en-PH').format(n); }
 function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
-function slug(name){ return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
+function pct(n,d){ return d ? (n/d*100) : 0; }
+function toISO(d){ return d.toISOString().slice(0,10); }
+
+function monthToDateRange(){
+  const now = new Date();
+  const from = new Date(now.getFullYear(), now.getMonth(), 1);
+  return { from: toISO(from), to: toISO(now) };
+}
+
+function getRange(){
+  return { from: document.getElementById('dateFrom').value, to: document.getElementById('dateTo').value };
+}
+
+function setRange(r){
+  document.getElementById('dateFrom').value = r.from;
+  document.getElementById('dateTo').value = r.to;
+}
+
+function companyStats(company, from, to){
+  const daily = (DATA.companies[company] && DATA.companies[company].daily) || [];
+  let orders=0, delivered=0, rts=0, sales=0;
+  for(const d of daily){
+    if(d.date < from || d.date > to) continue;
+    orders += d.orders; delivered += d.delivered; rts += d.rts; sales += d.sales;
+  }
+  return {
+    total_sales: sales, total_shipments: orders, delivered_count: delivered, rts_count: rts,
+    delivery_pct: pct(delivered, orders), rts_pct: pct(rts, orders)
+  };
+}
+
+function overviewStats(from, to){
+  let orders=0, delivered=0, rts=0, sales=0;
+  for(const company of Object.keys(DATA.companies)){
+    const s = companyStats(company, from, to);
+    orders += s.total_shipments; delivered += s.delivered_count; rts += s.rts_count; sales += s.total_sales;
+  }
+  return {
+    total_sales: sales, total_shipments: orders, delivered_count: delivered, rts_count: rts,
+    delivery_pct: pct(delivered, orders), rts_pct: pct(rts, orders)
+  };
+}
+
+function regionTop5(company, from, to){
+  const rows = (DATA.companies[company] && DATA.companies[company].region_product_daily) || [];
+  const agg = {};
+  for(const r of rows){
+    if(r.date < from || r.date > to) continue;
+    const key = r.region + '' + r.product;
+    if(!agg[key]) agg[key] = { region: r.region, product: r.product, orders:0, delivered:0, rts:0, sales:0 };
+    const a = agg[key];
+    a.orders += r.orders; a.delivered += r.delivered; a.rts += r.rts; a.sales += r.sales;
+  }
+  const byRegion = {};
+  REGIONS.forEach(r => byRegion[r] = []);
+  Object.values(agg).forEach(a => { if(byRegion[a.region]) byRegion[a.region].push(a); });
+  const result = {};
+  REGIONS.forEach(r => {
+    result[r] = byRegion[r]
+      .sort((a,b) => b.sales - a.sales)
+      .slice(0,5)
+      .map(a => ({
+        name: a.product, sales: a.sales, orders: a.orders,
+        delivery_pct: pct(a.delivered, a.orders), rts_pct: pct(a.rts, a.orders)
+      }));
+  });
+  return result;
+}
 
 function kpiRow(target, d, salesLabel, ordersLabel){
   target.innerHTML = `
@@ -147,35 +266,24 @@ function kpiRow(target, d, salesLabel, ordersLabel){
   `;
 }
 
-function renderJumpNav(){
-  const nav = document.getElementById('jumpNav');
-  nav.hidden = false;
-  nav.innerHTML = Object.keys(DATA.companies).map(name => `
-    <a class="jump-chip" href="#co-${slug(name)}"><span class="sw" style="background:${COMPANY_COLORS[name]}"></span>${name}</a>
-  `).join('');
-}
-
-function renderCompanySection(name, d){
-  return `
-    <section class="company-section" id="co-${slug(name)}">
-      <div class="detail-head"><span class="swatch" style="background:${COMPANY_COLORS[name]}"></span><h2>${name}</h2></div>
-      <div class="kpi-row">
-        <div class="kpi accent"><div class="label">Total Sales</div><div class="value">${peso(d.total_sales)}</div><div class="sub">Unit price &middot; Delivered orders</div></div>
-        <div class="kpi"><div class="label">Total Orders</div><div class="value">${num(d.total_shipments)}</div><div class="sub">Shipped + Returning + Returned + Delivered</div></div>
-        <div class="kpi good"><div class="label">Delivery %</div><div class="value">${d.delivery_pct.toFixed(1)}%</div><div class="sub">${num(d.delivered_count)} delivered</div></div>
-        <div class="kpi critical"><div class="label">RTS %</div><div class="value">${d.rts_pct.toFixed(1)}%</div><div class="sub">${num(d.rts_count)} returned/returning</div></div>
-      </div>
-      <div class="section-title">Top 5 Products per Region</div>
-      <div class="region-grid">${REGIONS.map(r=>regionCard(r, d.top5_by_region[r] || [], COMPANY_COLORS[name])).join('')}</div>
-    </section>
-  `;
-}
-
-function renderAll(){
-  kpiRow(document.getElementById('ov-kpis'), DATA.overview, 'Total Sales (lahat)', 'Total Orders');
-  renderJumpNav();
-  document.getElementById('companies-all').innerHTML =
-    Object.entries(DATA.companies).map(([name, d]) => renderCompanySection(name, d)).join('');
+function renderOverview(from, to){
+  kpiRow(document.getElementById('ov-kpis'), overviewStats(from, to), 'Total Sales (lahat)', 'Total Orders');
+  const body = document.getElementById('cmp-body');
+  body.innerHTML = '';
+  Object.keys(DATA.companies).forEach(name=>{
+    const d = companyStats(name, from, to);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="co-name"><span class="sw" style="background:${COMPANY_COLORS[name]}"></span>${name}</span></td>
+      <td>${peso(d.total_sales)}</td>
+      <td>${num(d.total_shipments)}</td>
+      <td class="${d.delivery_pct>=80?'pct-good':''}">${d.delivery_pct.toFixed(1)}%</td>
+      <td class="${d.rts_pct>=18?'pct-bad':''}">${d.rts_pct.toFixed(1)}%</td>
+      <td class="row-arrow">&rarr;</td>
+    `;
+    tr.addEventListener('click', ()=>openDetail(name));
+    body.appendChild(tr);
+  });
 }
 
 function regionCard(region, items, color){
@@ -196,6 +304,49 @@ function regionCard(region, items, color){
     </div>`;
 }
 
+function renderDetail(name, from, to){
+  const d = companyStats(name, from, to);
+  document.getElementById('detailName').textContent = name;
+  document.getElementById('detailSwatch').style.background = COMPANY_COLORS[name];
+  kpiRow(document.getElementById('detail-kpis'), d, 'Total Sales', 'Total Orders');
+  const regions = regionTop5(name, from, to);
+  const regionsEl = document.getElementById('detail-regions');
+  regionsEl.innerHTML = REGIONS.map(r=>regionCard(r, regions[r] || [], COMPANY_COLORS[name])).join('');
+}
+
+function openDetail(name){
+  currentCompany = name;
+  const {from, to} = getRange();
+  renderDetail(name, from, to);
+  document.getElementById('view-overview').classList.remove('active');
+  document.getElementById('view-detail').classList.add('active');
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+document.getElementById('backBtn').addEventListener('click', ()=>{
+  currentCompany = null;
+  document.getElementById('view-detail').classList.remove('active');
+  document.getElementById('view-overview').classList.add('active');
+});
+
+function renderCurrent(){
+  if(!DATA) return;
+  const {from, to} = getRange();
+  document.getElementById('rangeNote').textContent = from && to ? `${from} → ${to}` : '';
+  if(currentCompany){
+    renderDetail(currentCompany, from, to);
+  } else {
+    renderOverview(from, to);
+  }
+}
+
+document.getElementById('dateFrom').addEventListener('change', renderCurrent);
+document.getElementById('dateTo').addEventListener('change', renderCurrent);
+document.getElementById('dateReset').addEventListener('click', ()=>{
+  setRange(monthToDateRange());
+  renderCurrent();
+});
+
 function setAsOf(iso){
   const d = new Date(iso);
   document.getElementById('asOf').textContent = 'Updated ' + d.toLocaleString('en-PH', {dateStyle:'medium', timeStyle:'short'});
@@ -209,7 +360,12 @@ async function loadData(){
     DATA = fresh;
     Object.keys(DATA.companies).forEach((c,i)=>{ COMPANY_COLORS[c] = css(`--${SLOTS[i % SLOTS.length]}`); });
     document.getElementById('loadNote').style.display = 'none';
-    renderAll();
+    if(firstLoad){
+      setRange(monthToDateRange());
+      document.getElementById('view-overview').classList.add('active');
+      firstLoad = false;
+    }
+    renderCurrent();
     setAsOf(DATA.generated_at);
   }catch(err){
     document.getElementById('loadNote').textContent = 'Hindi makuha ang data.json (' + err.message + '). Susubukan ulit...';

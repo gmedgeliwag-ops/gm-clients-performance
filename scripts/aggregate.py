@@ -1,4 +1,4 @@
-import csv, json, re, sys, urllib.request
+import csv, json, sys, urllib.request
 from collections import defaultdict
 from datetime import datetime, timezone
 
@@ -19,7 +19,6 @@ REGION_MAP = {
     "Visayas": "Visayas",
     "Mindanao": "Mindanao",
 }
-REGIONS_ORDER = ["NCR", "Luzon", "Visayas", "Mindanao"]
 
 SHIPMENT_STATUSES = {"Shipped", "Returning", "Returned", "Returned (fee)", "Delivered"}
 RTS_STATUSES = {"Returned", "Returned (fee)", "Returning"}
@@ -35,6 +34,21 @@ def num(v):
         return 0.0
 
 
+DATE_FORMATS = ("%B %d, %Y", "%d/%m/%Y", "%Y-%m-%d")
+
+
+def parse_date(v):
+    v = (v or "").strip()
+    if not v:
+        return None
+    for fmt in DATE_FORMATS:
+        try:
+            return datetime.strptime(v, fmt).date().isoformat()
+        except ValueError:
+            continue
+    return None
+
+
 def fetch_rows(gid):
     url = f"{BASE}?gid={gid}&single=true&output=csv"
     with urllib.request.urlopen(url, timeout=60) as resp:
@@ -42,110 +56,67 @@ def fetch_rows(gid):
     return csv.DictReader(text.splitlines())
 
 
-def pct(n, d):
-    return round(n / d * 100, 2) if d else 0.0
-
-
 result = {"companies": {}}
-overall_sales = 0.0
-overall_shipments = 0
-overall_delivered = 0
-overall_rts = 0
 
 for company, gid in GIDS.items():
-    total_sales = 0.0
-    total_shipments = 0
-    delivered_count = 0
-    rts_count = 0
-    product_sales = defaultdict(float)
-
-    # (region, product) -> counters
-    rp_orders = defaultdict(int)
-    rp_delivered = defaultdict(int)
-    rp_rts = defaultdict(int)
-    rp_sales = defaultdict(float)
+    # date -> {orders, delivered, rts, sales}
+    daily = defaultdict(lambda: {"orders": 0, "delivered": 0, "rts": 0, "sales": 0.0})
+    # (date, region, product) -> {orders, delivered, rts, sales}
+    rpd = defaultdict(lambda: {"orders": 0, "delivered": 0, "rts": 0, "sales": 0.0})
 
     reader = fetch_rows(gid)
+    n_rows = 0
     for row in reader:
         status = (row.get("Status") or "").strip()
         tracking = (row.get("Tracking number") or "").strip()
         if not tracking or status not in SHIPMENT_STATUSES:
             continue
+        date = parse_date(row.get("Day created"))
+        if date is None:
+            continue
 
-        total_shipments += 1
+        n_rows += 1
+        is_delivered = status == "Delivered"
+        is_rts = status in RTS_STATUSES
+        price = num(row.get("Unit price")) if is_delivered else 0.0
+
+        d = daily[date]
+        d["orders"] += 1
+        if is_delivered:
+            d["delivered"] += 1
+            d["sales"] += price
+        elif is_rts:
+            d["rts"] += 1
+
         region_raw = (row.get("By region") or "").strip()
         region = REGION_MAP.get(region_raw)
-        product = (row.get("Product name") or "Unknown").strip()
-
         if region:
-            rp_orders[(region, product)] += 1
+            product = (row.get("Product name") or "Unknown").strip()
+            rp = rpd[(date, region, product)]
+            rp["orders"] += 1
+            if is_delivered:
+                rp["delivered"] += 1
+                rp["sales"] += price
+            elif is_rts:
+                rp["rts"] += 1
 
-        if status == "Delivered":
-            delivered_count += 1
-            price = num(row.get("Unit price"))
-            total_sales += price
-            product_sales[product] += price
-            if region:
-                rp_delivered[(region, product)] += 1
-                rp_sales[(region, product)] += price
-        elif status in RTS_STATUSES:
-            rts_count += 1
-            if region:
-                rp_rts[(region, product)] += 1
+    daily_list = [
+        {"date": date, "orders": v["orders"], "delivered": v["delivered"], "rts": v["rts"], "sales": round(v["sales"], 2)}
+        for date, v in sorted(daily.items())
+    ]
+    rpd_list = [
+        {"date": date, "region": region, "product": product,
+         "orders": v["orders"], "delivered": v["delivered"], "rts": v["rts"], "sales": round(v["sales"], 2)}
+        for (date, region, product), v in sorted(rpd.items())
+    ]
 
-    delivery_pct = pct(delivered_count, total_shipments)
-    rts_pct = pct(rts_count, total_shipments)
+    result["companies"][company] = {"daily": daily_list, "region_product_daily": rpd_list}
+    print(f"{company}: rows={n_rows} daily_buckets={len(daily_list)} region_product_buckets={len(rpd_list)}", file=sys.stderr)
 
-    top5_products = sorted(product_sales.items(), key=lambda x: -x[1])[:5]
-
-    top5_by_region = {}
-    for r in REGIONS_ORDER:
-        candidates = [(p, s) for (reg, p), s in rp_sales.items() if reg == r]
-        top5 = sorted(candidates, key=lambda x: -x[1])[:5]
-        items = []
-        for p, s in top5:
-            orders = rp_orders[(r, p)]
-            delivered = rp_delivered[(r, p)]
-            rts = rp_rts[(r, p)]
-            items.append({
-                "name": p,
-                "sales": round(s, 2),
-                "orders": orders,
-                "delivery_pct": pct(delivered, orders),
-                "rts_pct": pct(rts, orders),
-            })
-        top5_by_region[r] = items
-
-    result["companies"][company] = {
-        "total_sales": round(total_sales, 2),
-        "total_shipments": total_shipments,
-        "delivered_count": delivered_count,
-        "rts_count": rts_count,
-        "delivery_pct": delivery_pct,
-        "rts_pct": rts_pct,
-        "top5_products": [{"name": n, "sales": round(v, 2)} for n, v in top5_products],
-        "top5_by_region": top5_by_region,
-    }
-
-    overall_sales += total_sales
-    overall_shipments += total_shipments
-    overall_delivered += delivered_count
-    overall_rts += rts_count
-
-    print(f"{company}: shipments={total_shipments} sales={total_sales:.0f} delivery%={delivery_pct} rts%={rts_pct}", file=sys.stderr)
-
-result["overview"] = {
-    "total_sales": round(overall_sales, 2),
-    "total_shipments": overall_shipments,
-    "delivered_count": overall_delivered,
-    "rts_count": overall_rts,
-    "delivery_pct": pct(overall_delivered, overall_shipments),
-    "rts_pct": pct(overall_rts, overall_shipments),
-}
 result["generated_at"] = datetime.now(timezone.utc).isoformat()
 
 out_path = sys.argv[1] if len(sys.argv) > 1 else "data.json"
 with open(out_path, "w", encoding="utf-8") as f:
-    json.dump(result, f, indent=2, ensure_ascii=False)
+    json.dump(result, f, separators=(",", ":"), ensure_ascii=False)
 
 print("wrote", out_path, file=sys.stderr)
