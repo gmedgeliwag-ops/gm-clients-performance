@@ -1,16 +1,16 @@
 {
   "companies": {
     "M&K": {
-      "total_sales": 19839159.0,
+      "total_sales": 19846254.0,
       "total_shipments": 27175,
-      "delivered_count": 23648,
-      "rts_count": 3232,
-      "delivery_pct": 87.02,
-      "rts_pct": 11.89,
+      "delivered_count": 23656,
+      "rts_count": 3233,
+      "delivery_pct": 87.05,
+      "rts_pct": 11.9,
       "top5_products": [
         {
           "name": "Clearsight V.3",
-          "sales": 15699740.0
+          "sales": 15706835.0
         },
         {
           "name": "Pterygium Eye Drops",
@@ -33,9 +33,9 @@
         "NCR": [
           {
             "name": "Clearsight V.3",
-            "sales": 2378930.0,
+            "sales": 2380429.0,
             "orders": 3230,
-            "delivery_pct": 90.06,
+            "delivery_pct": 90.12,
             "rts_pct": 9.6
           },
           {
@@ -70,9 +70,9 @@
         "Luzon": [
           {
             "name": "Clearsight V.3",
-            "sales": 8042229.0,
+            "sales": 8044828.0,
             "orders": 10888,
-            "delivery_pct": 89.74,
+            "delivery_pct": 89.77,
             "rts_pct": 9.61
           },
           {
@@ -144,10 +144,10 @@
         "Mindanao": [
           {
             "name": "Clearsight V.3",
-            "sales": 2710081.0,
+            "sales": 2713078.0,
             "orders": 3940,
-            "delivery_pct": 78.6,
-            "rts_pct": 19.19
+            "delivery_pct": 78.68,
+            "rts_pct": 19.21
           },
           {
             "name": "Pterygium Eye Drops",
@@ -181,16 +181,16 @@
       }
     },
     "M&J": {
-      "total_sales": 18886790.0,
+      "total_sales": 18889890.0,
       "total_shipments": 28325,
-      "delivered_count": 23888,
-      "rts_count": 4134,
-      "delivery_pct": 84.34,
-      "rts_pct": 14.59,
+      "delivered_count": 23892,
+      "rts_count": 4135,
+      "delivery_pct": 84.35,
+      "rts_pct": 14.6,
       "top5_products": [
         {
           "name": "Clear Eye Sight",
-          "sales": 9888442.0
+          "sales": 9891542.0
         },
         {
           "name": "AudiCure Ear Relief Drops",
@@ -250,9 +250,9 @@
         "Luzon": [
           {
             "name": "Clear Eye Sight",
-            "sales": 4866389.0,
+            "sales": 4869489.0,
             "orders": 7235,
-            "delivery_pct": 86.95,
+            "delivery_pct": 87.01,
             "rts_pct": 12.44
           },
           {
@@ -327,7 +327,7 @@
             "sales": 1935520.0,
             "orders": 3190,
             "delivery_pct": 73.45,
-            "rts_pct": 23.95
+            "rts_pct": 23.98
           },
           {
             "name": "AudiCure Ear Relief Drops",
@@ -361,20 +361,20 @@
       }
     },
     "SIC": {
-      "total_sales": 24850477.0,
+      "total_sales": 24857377.0,
       "total_shipments": 40561,
-      "delivered_count": 31995,
-      "rts_count": 8176,
-      "delivery_pct": 78.88,
+      "delivered_count": 32002,
+      "rts_count": 8177,
+      "delivery_pct": 78.9,
       "rts_pct": 20.16,
       "top5_products": [
         {
           "name": "CLEARSIGHT PREMIUM V.3",
-          "sales": 9288866.0
+          "sales": 9290866.0
         },
         {
           "name": "VATICAN ROSARY",
-          "sales": 7989636.0
+          "sales": 7991836.0
         },
         {
           "name": "PTERYGIUM EYE REPAIR DROP",
@@ -382,7 +382,7 @@
         },
         {
           "name": "CANPRO GUYABANO",
-          "sales": 1195719.0
+          "sales": 1198419.0
         },
         {
           "name": "ESSENTIALS",
@@ -430,16 +430,16 @@
         "Luzon": [
           {
             "name": "CLEARSIGHT PREMIUM V.3",
-            "sales": 4760127.0,
+            "sales": 4762127.0,
             "orders": 6570,
-            "delivery_pct": 86.47,
+            "delivery_pct": 86.5,
             "rts_pct": 12.94
           },
           {
             "name": "VATICAN ROSARY",
-            "sales": 3563601.0,
+            "sales": 3565251.0,
             "orders": 7701,
-            "delivery_pct": 77.04,
+            "delivery_pct": 77.08,
             "rts_pct": 22.2
           },
           {
@@ -451,9 +451,9 @@
           },
           {
             "name": "CANPRO GUYABANO",
-            "sales": 607061.0,
+            "sales": 609761.0,
             "orders": 434,
-            "delivery_pct": 83.87,
+            "delivery_pct": 84.1,
             "rts_pct": 15.21
           },
           {
@@ -467,9 +467,9 @@
         "Visayas": [
           {
             "name": "VATICAN ROSARY",
-            "sales": 1844773.0,
+            "sales": 1845323.0,
             "orders": 4336,
-            "delivery_pct": 70.55,
+            "delivery_pct": 70.57,
             "rts_pct": 28.44
           },
           {
@@ -507,7 +507,7 @@
             "sales": 1686832.0,
             "orders": 2452,
             "delivery_pct": 76.43,
-            "rts_pct": 21.7
+            "rts_pct": 21.74
           },
           {
             "name": "VATICAN ROSARY",
@@ -541,16 +541,16 @@
       }
     },
     "peakCo": {
-      "total_sales": 11689810.0,
+      "total_sales": 11692907.0,
       "total_shipments": 16452,
-      "delivered_count": 13856,
+      "delivered_count": 13860,
       "rts_count": 2385,
-      "delivery_pct": 84.22,
+      "delivery_pct": 84.25,
       "rts_pct": 14.5,
       "top5_products": [
         {
           "name": "Clear Sight 3.0 [WITH BOX]",
-          "sales": 10909124.0
+          "sales": 10911422.0
         },
         {
           "name": "CanPro Guyabano Juice Drink",
@@ -610,9 +610,9 @@
         "Luzon": [
           {
             "name": "Clear Sight 3.0 [WITH BOX]",
-            "sales": 6233352.0,
+            "sales": 6233852.0,
             "orders": 8074,
-            "delivery_pct": 87.52,
+            "delivery_pct": 87.53,
             "rts_pct": 11.83
           },
           {
@@ -647,9 +647,9 @@
         "Visayas": [
           {
             "name": "Clear Sight 3.0 [WITH BOX]",
-            "sales": 1513570.0,
+            "sales": 1514569.0,
             "orders": 2472,
-            "delivery_pct": 79.77,
+            "delivery_pct": 79.81,
             "rts_pct": 18.08
           },
           {
@@ -684,9 +684,9 @@
         "Mindanao": [
           {
             "name": "Clear Sight 3.0 [WITH BOX]",
-            "sales": 1677767.0,
+            "sales": 1678566.0,
             "orders": 2843,
-            "delivery_pct": 75.94,
+            "delivery_pct": 75.98,
             "rts_pct": 21.67
           },
           {
@@ -721,16 +721,16 @@
       }
     },
     "MLC": {
-      "total_sales": 12112637.99,
+      "total_sales": 12114934.99,
       "total_shipments": 20889,
-      "delivered_count": 15806,
+      "delivered_count": 15809,
       "rts_count": 4770,
-      "delivery_pct": 75.67,
+      "delivery_pct": 75.68,
       "rts_pct": 22.83,
       "top5_products": [
         {
           "name": "Clear Sight V.3 Premium",
-          "sales": 10654511.99
+          "sales": 10655510.99
         },
         {
           "name": "TAGURO OIL",
@@ -790,9 +790,9 @@
         "Luzon": [
           {
             "name": "Clear Sight V.3 Premium",
-            "sales": 5505474.99,
+            "sales": 5506473.99,
             "orders": 9000,
-            "delivery_pct": 80.97,
+            "delivery_pct": 80.98,
             "rts_pct": 18.62
           },
           {
@@ -1029,12 +1029,12 @@
     }
   },
   "overview": {
-    "total_sales": 90882649.99,
+    "total_sales": 90905138.99,
     "total_shipments": 138134,
-    "delivered_count": 113337,
-    "rts_count": 23263,
-    "delivery_pct": 82.05,
+    "delivered_count": 113363,
+    "rts_count": 23266,
+    "delivery_pct": 82.07,
     "rts_pct": 16.84
   },
-  "generated_at": "2026-09-17T08:12:54.386932+00:00"
+  "generated_at": "2026-09-17T08:34:28.593937+00:00"
 }
