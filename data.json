@@ -1,0 +1,1040 @@
+{
+  "companies": {
+    "M&K": {
+      "total_sales": 19833063.0,
+      "total_shipments": 27175,
+      "delivered_count": 23641,
+      "rts_count": 3230,
+      "delivery_pct": 87.0,
+      "rts_pct": 11.89,
+      "top5_products": [
+        {
+          "name": "Clearsight V.3",
+          "sales": 15695142.0
+        },
+        {
+          "name": "Pterygium Eye Drops",
+          "sales": 3554160.0
+        },
+        {
+          "name": "Sinuxyl Nasal Spray",
+          "sales": 409596.0
+        },
+        {
+          "name": "CanPro Guyabano Drink",
+          "sales": 54585.0
+        },
+        {
+          "name": "PET GLOVES",
+          "sales": 52052.0
+        }
+      ],
+      "top5_by_region": {
+        "NCR": [
+          {
+            "name": "Clearsight V.3",
+            "sales": 2378930.0,
+            "orders": 3230,
+            "delivery_pct": 90.06,
+            "rts_pct": 9.6
+          },
+          {
+            "name": "Pterygium Eye Drops",
+            "sales": 405927.0,
+            "orders": 532,
+            "delivery_pct": 91.73,
+            "rts_pct": 8.08
+          },
+          {
+            "name": "Sinuxyl Nasal Spray",
+            "sales": 56732.0,
+            "orders": 74,
+            "delivery_pct": 91.89,
+            "rts_pct": 8.11
+          },
+          {
+            "name": "PET GLOVES",
+            "sales": 12975.0,
+            "orders": 26,
+            "delivery_pct": 96.15,
+            "rts_pct": 3.85
+          },
+          {
+            "name": "CanPro Guyabano Drink",
+            "sales": 8397.0,
+            "orders": 10,
+            "delivery_pct": 60.0,
+            "rts_pct": 40.0
+          }
+        ],
+        "Luzon": [
+          {
+            "name": "Clearsight V.3",
+            "sales": 8038931.0,
+            "orders": 10888,
+            "delivery_pct": 89.71,
+            "rts_pct": 9.61
+          },
+          {
+            "name": "Pterygium Eye Drops",
+            "sales": 1791838.0,
+            "orders": 2294,
+            "delivery_pct": 90.98,
+            "rts_pct": 8.33
+          },
+          {
+            "name": "Sinuxyl Nasal Spray",
+            "sales": 229113.0,
+            "orders": 305,
+            "delivery_pct": 93.11,
+            "rts_pct": 6.89
+          },
+          {
+            "name": "CanPro Guyabano Drink",
+            "sales": 29493.0,
+            "orders": 23,
+            "delivery_pct": 82.61,
+            "rts_pct": 17.39
+          },
+          {
+            "name": "PET GLOVES",
+            "sales": 20212.0,
+            "orders": 40,
+            "delivery_pct": 95.0,
+            "rts_pct": 5.0
+          }
+        ],
+        "Visayas": [
+          {
+            "name": "Clearsight V.3",
+            "sales": 2567700.0,
+            "orders": 3541,
+            "delivery_pct": 85.2,
+            "rts_pct": 13.56
+          },
+          {
+            "name": "Pterygium Eye Drops",
+            "sales": 655909.0,
+            "orders": 867,
+            "delivery_pct": 85.01,
+            "rts_pct": 13.96
+          },
+          {
+            "name": "Sinuxyl Nasal Spray",
+            "sales": 56931.0,
+            "orders": 76,
+            "delivery_pct": 88.16,
+            "rts_pct": 11.84
+          },
+          {
+            "name": "PET GLOVES",
+            "sales": 8684.0,
+            "orders": 16,
+            "delivery_pct": 100.0,
+            "rts_pct": 0.0
+          },
+          {
+            "name": "CanPro Guyabano Drink",
+            "sales": 7998.0,
+            "orders": 8,
+            "delivery_pct": 75.0,
+            "rts_pct": 25.0
+          }
+        ],
+        "Mindanao": [
+          {
+            "name": "Clearsight V.3",
+            "sales": 2709581.0,
+            "orders": 3940,
+            "delivery_pct": 78.58,
+            "rts_pct": 19.16
+          },
+          {
+            "name": "Pterygium Eye Drops",
+            "sales": 700486.0,
+            "orders": 1049,
+            "delivery_pct": 76.26,
+            "rts_pct": 19.54
+          },
+          {
+            "name": "Sinuxyl Nasal Spray",
+            "sales": 66820.0,
+            "orders": 96,
+            "delivery_pct": 83.33,
+            "rts_pct": 16.67
+          },
+          {
+            "name": "PET GLOVES",
+            "sales": 10181.0,
+            "orders": 23,
+            "delivery_pct": 82.61,
+            "rts_pct": 17.39
+          },
+          {
+            "name": "CanPro Guyabano Drink",
+            "sales": 8697.0,
+            "orders": 7,
+            "delivery_pct": 85.71,
+            "rts_pct": 14.29
+          }
+        ]
+      }
+    },
+    "M&J": {
+      "total_sales": 18881390.0,
+      "total_shipments": 28325,
+      "delivered_count": 23879,
+      "rts_count": 4134,
+      "delivery_pct": 84.3,
+      "rts_pct": 14.59,
+      "top5_products": [
+        {
+          "name": "Clear Eye Sight",
+          "sales": 9885342.0
+        },
+        {
+          "name": "AudiCure Ear Relief Drops",
+          "sales": 4135737.0
+        },
+        {
+          "name": "Pterygium Eye Repair Drop",
+          "sales": 1892108.0
+        },
+        {
+          "name": "Clear Eye Sight PH - CRD",
+          "sales": 1351646.0
+        },
+        {
+          "name": "AudiCure Ear Drop - CRD",
+          "sales": 672250.0
+        }
+      ],
+      "top5_by_region": {
+        "NCR": [
+          {
+            "name": "Clear Eye Sight",
+            "sales": 1462682.0,
+            "orders": 2176,
+            "delivery_pct": 86.99,
+            "rts_pct": 12.5
+          },
+          {
+            "name": "AudiCure Ear Relief Drops",
+            "sales": 584807.0,
+            "orders": 851,
+            "delivery_pct": 91.07,
+            "rts_pct": 8.7
+          },
+          {
+            "name": "Clear Eye Sight PH - CRD",
+            "sales": 213263.0,
+            "orders": 266,
+            "delivery_pct": 93.61,
+            "rts_pct": 6.39
+          },
+          {
+            "name": "Pterygium Eye Repair Drop",
+            "sales": 171754.0,
+            "orders": 248,
+            "delivery_pct": 85.48,
+            "rts_pct": 14.52
+          },
+          {
+            "name": "AudiCure Ear Drop - CRD",
+            "sales": 113371.0,
+            "orders": 139,
+            "delivery_pct": 95.68,
+            "rts_pct": 4.32
+          }
+        ],
+        "Luzon": [
+          {
+            "name": "Clear Eye Sight",
+            "sales": 4864589.0,
+            "orders": 7235,
+            "delivery_pct": 86.91,
+            "rts_pct": 12.44
+          },
+          {
+            "name": "AudiCure Ear Relief Drops",
+            "sales": 2160209.0,
+            "orders": 3247,
+            "delivery_pct": 89.59,
+            "rts_pct": 9.79
+          },
+          {
+            "name": "Pterygium Eye Repair Drop",
+            "sales": 934609.0,
+            "orders": 1345,
+            "delivery_pct": 85.13,
+            "rts_pct": 14.05
+          },
+          {
+            "name": "Clear Eye Sight PH - CRD",
+            "sales": 667371.0,
+            "orders": 837,
+            "delivery_pct": 94.5,
+            "rts_pct": 5.26
+          },
+          {
+            "name": "AudiCure Ear Drop - CRD",
+            "sales": 341411.0,
+            "orders": 427,
+            "delivery_pct": 95.55,
+            "rts_pct": 3.51
+          }
+        ],
+        "Visayas": [
+          {
+            "name": "Clear Eye Sight",
+            "sales": 1623051.0,
+            "orders": 2538,
+            "delivery_pct": 80.1,
+            "rts_pct": 18.68
+          },
+          {
+            "name": "AudiCure Ear Relief Drops",
+            "sales": 627359.0,
+            "orders": 1000,
+            "delivery_pct": 83.2,
+            "rts_pct": 15.4
+          },
+          {
+            "name": "Pterygium Eye Repair Drop",
+            "sales": 349331.0,
+            "orders": 514,
+            "delivery_pct": 79.38,
+            "rts_pct": 18.29
+          },
+          {
+            "name": "Clear Eye Sight PH - CRD",
+            "sales": 259324.0,
+            "orders": 329,
+            "delivery_pct": 90.88,
+            "rts_pct": 8.21
+          },
+          {
+            "name": "Sinuxyl Nasal Spray",
+            "sales": 108827.0,
+            "orders": 177,
+            "delivery_pct": 83.62,
+            "rts_pct": 16.38
+          }
+        ],
+        "Mindanao": [
+          {
+            "name": "Clear Eye Sight",
+            "sales": 1935020.0,
+            "orders": 3190,
+            "delivery_pct": 73.42,
+            "rts_pct": 23.95
+          },
+          {
+            "name": "AudiCure Ear Relief Drops",
+            "sales": 763362.0,
+            "orders": 1394,
+            "delivery_pct": 72.24,
+            "rts_pct": 25.25
+          },
+          {
+            "name": "Pterygium Eye Repair Drop",
+            "sales": 436414.0,
+            "orders": 688,
+            "delivery_pct": 72.97,
+            "rts_pct": 25.15
+          },
+          {
+            "name": "Clear Eye Sight PH - CRD",
+            "sales": 211688.0,
+            "orders": 289,
+            "delivery_pct": 83.04,
+            "rts_pct": 16.26
+          },
+          {
+            "name": "Sinuxyl Nasal Spray",
+            "sales": 140719.0,
+            "orders": 227,
+            "delivery_pct": 77.53,
+            "rts_pct": 21.59
+          }
+        ]
+      }
+    },
+    "SIC": {
+      "total_sales": 24843177.0,
+      "total_shipments": 40561,
+      "delivered_count": 31986,
+      "rts_count": 8174,
+      "delivery_pct": 78.86,
+      "rts_pct": 20.15,
+      "top5_products": [
+        {
+          "name": "CLEARSIGHT PREMIUM V.3",
+          "sales": 9284566.0
+        },
+        {
+          "name": "VATICAN ROSARY",
+          "sales": 7987436.0
+        },
+        {
+          "name": "PTERYGIUM EYE REPAIR DROP",
+          "sales": 3920282.0
+        },
+        {
+          "name": "CANPRO GUYABANO",
+          "sales": 1195719.0
+        },
+        {
+          "name": "ESSENTIALS",
+          "sales": 706721.0
+        }
+      ],
+      "top5_by_region": {
+        "NCR": [
+          {
+            "name": "CLEARSIGHT PREMIUM V.3",
+            "sales": 1244037.0,
+            "orders": 1704,
+            "delivery_pct": 86.62,
+            "rts_pct": 13.32
+          },
+          {
+            "name": "VATICAN ROSARY",
+            "sales": 1204689.0,
+            "orders": 2399,
+            "delivery_pct": 81.28,
+            "rts_pct": 18.38
+          },
+          {
+            "name": "PTERYGIUM EYE REPAIR DROP",
+            "sales": 468239.0,
+            "orders": 606,
+            "delivery_pct": 88.94,
+            "rts_pct": 11.06
+          },
+          {
+            "name": "CANPRO GUYABANO",
+            "sales": 153788.0,
+            "orders": 113,
+            "delivery_pct": 81.42,
+            "rts_pct": 18.58
+          },
+          {
+            "name": "ESSENTIALS",
+            "sales": 91750.0,
+            "orders": 133,
+            "delivery_pct": 87.97,
+            "rts_pct": 12.03
+          }
+        ],
+        "Luzon": [
+          {
+            "name": "CLEARSIGHT PREMIUM V.3",
+            "sales": 4757327.0,
+            "orders": 6570,
+            "delivery_pct": 86.42,
+            "rts_pct": 12.94
+          },
+          {
+            "name": "VATICAN ROSARY",
+            "sales": 3563601.0,
+            "orders": 7701,
+            "delivery_pct": 77.04,
+            "rts_pct": 22.2
+          },
+          {
+            "name": "PTERYGIUM EYE REPAIR DROP",
+            "sales": 1953289.0,
+            "orders": 2535,
+            "delivery_pct": 88.64,
+            "rts_pct": 10.69
+          },
+          {
+            "name": "CANPRO GUYABANO",
+            "sales": 607061.0,
+            "orders": 434,
+            "delivery_pct": 83.87,
+            "rts_pct": 15.21
+          },
+          {
+            "name": "ESSENTIALS",
+            "sales": 313238.0,
+            "orders": 432,
+            "delivery_pct": 88.43,
+            "rts_pct": 11.57
+          }
+        ],
+        "Visayas": [
+          {
+            "name": "VATICAN ROSARY",
+            "sales": 1844773.0,
+            "orders": 4336,
+            "delivery_pct": 70.55,
+            "rts_pct": 28.41
+          },
+          {
+            "name": "CLEARSIGHT PREMIUM V.3",
+            "sales": 1597870.0,
+            "orders": 2275,
+            "delivery_pct": 81.05,
+            "rts_pct": 17.45
+          },
+          {
+            "name": "PTERYGIUM EYE REPAIR DROP",
+            "sales": 636686.0,
+            "orders": 840,
+            "delivery_pct": 83.1,
+            "rts_pct": 15.71
+          },
+          {
+            "name": "CANPRO GUYABANO",
+            "sales": 221480.0,
+            "orders": 149,
+            "delivery_pct": 83.22,
+            "rts_pct": 13.42
+          },
+          {
+            "name": "ESSENTIALS",
+            "sales": 143085.0,
+            "orders": 209,
+            "delivery_pct": 82.78,
+            "rts_pct": 17.22
+          }
+        ],
+        "Mindanao": [
+          {
+            "name": "CLEARSIGHT PREMIUM V.3",
+            "sales": 1685332.0,
+            "orders": 2452,
+            "delivery_pct": 76.39,
+            "rts_pct": 21.7
+          },
+          {
+            "name": "VATICAN ROSARY",
+            "sales": 1374373.0,
+            "orders": 3621,
+            "delivery_pct": 62.72,
+            "rts_pct": 35.76
+          },
+          {
+            "name": "PTERYGIUM EYE REPAIR DROP",
+            "sales": 862068.0,
+            "orders": 1206,
+            "delivery_pct": 77.69,
+            "rts_pct": 20.48
+          },
+          {
+            "name": "CANPRO GUYABANO",
+            "sales": 213390.0,
+            "orders": 159,
+            "delivery_pct": 72.96,
+            "rts_pct": 25.16
+          },
+          {
+            "name": "ESSENTIALS",
+            "sales": 158648.0,
+            "orders": 248,
+            "delivery_pct": 74.6,
+            "rts_pct": 25.4
+          }
+        ]
+      }
+    },
+    "peakCo": {
+      "total_sales": 11683518.0,
+      "total_shipments": 16452,
+      "delivered_count": 13847,
+      "rts_count": 2385,
+      "delivery_pct": 84.17,
+      "rts_pct": 14.5,
+      "top5_products": [
+        {
+          "name": "Clear Sight 3.0 [WITH BOX]",
+          "sales": 10902832.0
+        },
+        {
+          "name": "CanPro Guyabano Juice Drink",
+          "sales": 454279.0
+        },
+        {
+          "name": "Pterygium Eye Repair Drops",
+          "sales": 68526.0
+        },
+        {
+          "name": "Clear Sight",
+          "sales": 61441.0
+        },
+        {
+          "name": "CANPRO1 - CanPro Guyabano Juice Drink Supplement for Stroke, Diabetes, Cancer and Immune System",
+          "sales": 59960.0
+        }
+      ],
+      "top5_by_region": {
+        "NCR": [
+          {
+            "name": "Clear Sight 3.0 [WITH BOX]",
+            "sales": 1484435.0,
+            "orders": 2288,
+            "delivery_pct": 88.11,
+            "rts_pct": 11.58
+          },
+          {
+            "name": "CanPro Guyabano Juice Drink",
+            "sales": 73674.0,
+            "orders": 48,
+            "delivery_pct": 83.33,
+            "rts_pct": 16.67
+          },
+          {
+            "name": "Clear Sight",
+            "sales": 13286.0,
+            "orders": 16,
+            "delivery_pct": 93.75,
+            "rts_pct": 6.25
+          },
+          {
+            "name": "CS1 - Original ClearSight Eyedrops for Cataract Care Dc Willie Ong",
+            "sales": 4990.0,
+            "orders": 10,
+            "delivery_pct": 100.0,
+            "rts_pct": 0.0
+          },
+          {
+            "name": "Pterygium Eye Repair Drops",
+            "sales": 4895.0,
+            "orders": 8,
+            "delivery_pct": 100.0,
+            "rts_pct": 0.0
+          }
+        ],
+        "Luzon": [
+          {
+            "name": "Clear Sight 3.0 [WITH BOX]",
+            "sales": 6230256.0,
+            "orders": 8074,
+            "delivery_pct": 87.45,
+            "rts_pct": 11.83
+          },
+          {
+            "name": "CanPro Guyabano Juice Drink",
+            "sales": 192051.0,
+            "orders": 130,
+            "delivery_pct": 85.38,
+            "rts_pct": 14.62
+          },
+          {
+            "name": "CANPRO1 - CanPro Guyabano Juice Drink Supplement for Stroke, Diabetes, Cancer and Immune System",
+            "sales": 40473.0,
+            "orders": 28,
+            "delivery_pct": 96.43,
+            "rts_pct": 3.57
+          },
+          {
+            "name": "Pterygium Eye Repair Drops",
+            "sales": 31663.0,
+            "orders": 63,
+            "delivery_pct": 80.95,
+            "rts_pct": 19.05
+          },
+          {
+            "name": "Clear Sight",
+            "sales": 25274.0,
+            "orders": 36,
+            "delivery_pct": 86.11,
+            "rts_pct": 8.33
+          }
+        ],
+        "Visayas": [
+          {
+            "name": "Clear Sight 3.0 [WITH BOX]",
+            "sales": 1512272.0,
+            "orders": 2472,
+            "delivery_pct": 79.69,
+            "rts_pct": 18.08
+          },
+          {
+            "name": "CanPro Guyabano Juice Drink",
+            "sales": 83182.0,
+            "orders": 54,
+            "delivery_pct": 85.19,
+            "rts_pct": 14.81
+          },
+          {
+            "name": "Clear Sight",
+            "sales": 17386.0,
+            "orders": 21,
+            "delivery_pct": 85.71,
+            "rts_pct": 14.29
+          },
+          {
+            "name": "Pterygium Eye Repair Drops",
+            "sales": 8890.0,
+            "orders": 14,
+            "delivery_pct": 85.71,
+            "rts_pct": 14.29
+          },
+          {
+            "name": "CANPRO1 - CanPro Guyabano Juice Drink Supplement for Stroke, Diabetes, Cancer and Immune System",
+            "sales": 5996.0,
+            "orders": 4,
+            "delivery_pct": 100.0,
+            "rts_pct": 0.0
+          }
+        ],
+        "Mindanao": [
+          {
+            "name": "Clear Sight 3.0 [WITH BOX]",
+            "sales": 1675869.0,
+            "orders": 2843,
+            "delivery_pct": 75.87,
+            "rts_pct": 21.67
+          },
+          {
+            "name": "CanPro Guyabano Juice Drink",
+            "sales": 105372.0,
+            "orders": 77,
+            "delivery_pct": 77.92,
+            "rts_pct": 20.78
+          },
+          {
+            "name": "Pterygium Eye Repair Drops",
+            "sales": 23078.0,
+            "orders": 47,
+            "delivery_pct": 74.47,
+            "rts_pct": 25.53
+          },
+          {
+            "name": "CANPRO2 - CanPro Guyabano Juice Drink Supplement for Stroke, Diabetes, Cancer and Immune System",
+            "sales": 11196.0,
+            "orders": 4,
+            "delivery_pct": 100.0,
+            "rts_pct": 0.0
+          },
+          {
+            "name": "CANPRO1 - CanPro Guyabano Juice Drink Supplement for Stroke, Diabetes, Cancer and Immune System",
+            "sales": 5996.0,
+            "orders": 4,
+            "delivery_pct": 100.0,
+            "rts_pct": 0.0
+          }
+        ]
+      }
+    },
+    "MLC": {
+      "total_sales": 12110839.99,
+      "total_shipments": 20889,
+      "delivered_count": 15804,
+      "rts_count": 4770,
+      "delivery_pct": 75.66,
+      "rts_pct": 22.83,
+      "top5_products": [
+        {
+          "name": "Clear Sight V.3 Premium",
+          "sales": 10654511.99
+        },
+        {
+          "name": "TAGURO OIL",
+          "sales": 483118.0
+        },
+        {
+          "name": "CANPRO GUYABANO DRINK",
+          "sales": 366757.0
+        },
+        {
+          "name": "TAGURO ENLARGEMENT",
+          "sales": 323005.0
+        },
+        {
+          "name": "Haplunas Healing Eye Cream",
+          "sales": 136095.0
+        }
+      ],
+      "top5_by_region": {
+        "NCR": [
+          {
+            "name": "Clear Sight V.3 Premium",
+            "sales": 1630806.0,
+            "orders": 2664,
+            "delivery_pct": 80.78,
+            "rts_pct": 18.99
+          },
+          {
+            "name": "CANPRO GUYABANO DRINK",
+            "sales": 60616.0,
+            "orders": 58,
+            "delivery_pct": 70.69,
+            "rts_pct": 29.31
+          },
+          {
+            "name": "TAGURO OIL",
+            "sales": 53504.0,
+            "orders": 112,
+            "delivery_pct": 76.79,
+            "rts_pct": 23.21
+          },
+          {
+            "name": "TAGURO ENLARGEMENT",
+            "sales": 20767.0,
+            "orders": 49,
+            "delivery_pct": 75.51,
+            "rts_pct": 24.49
+          },
+          {
+            "name": "Haplunas Healing Eye Cream",
+            "sales": 14198.0,
+            "orders": 19,
+            "delivery_pct": 73.68,
+            "rts_pct": 26.32
+          }
+        ],
+        "Luzon": [
+          {
+            "name": "Clear Sight V.3 Premium",
+            "sales": 5505474.99,
+            "orders": 9000,
+            "delivery_pct": 80.97,
+            "rts_pct": 18.62
+          },
+          {
+            "name": "CANPRO GUYABANO DRINK",
+            "sales": 181613.0,
+            "orders": 158,
+            "delivery_pct": 77.85,
+            "rts_pct": 20.89
+          },
+          {
+            "name": "TAGURO OIL",
+            "sales": 180505.0,
+            "orders": 378,
+            "delivery_pct": 80.42,
+            "rts_pct": 19.58
+          },
+          {
+            "name": "TAGURO ENLARGEMENT",
+            "sales": 105241.0,
+            "orders": 221,
+            "delivery_pct": 78.73,
+            "rts_pct": 21.27
+          },
+          {
+            "name": "Haplunas Healing Eye Cream",
+            "sales": 73698.0,
+            "orders": 100,
+            "delivery_pct": 72.0,
+            "rts_pct": 28.0
+          }
+        ],
+        "Visayas": [
+          {
+            "name": "Clear Sight V.3 Premium",
+            "sales": 1682293.0,
+            "orders": 2891,
+            "delivery_pct": 74.78,
+            "rts_pct": 24.63
+          },
+          {
+            "name": "TAGURO OIL",
+            "sales": 86300.0,
+            "orders": 216,
+            "delivery_pct": 68.06,
+            "rts_pct": 31.48
+          },
+          {
+            "name": "CANPRO GUYABANO DRINK",
+            "sales": 56370.0,
+            "orders": 56,
+            "delivery_pct": 69.64,
+            "rts_pct": 19.64
+          },
+          {
+            "name": "TAGURO ENLARGEMENT",
+            "sales": 51218.0,
+            "orders": 134,
+            "delivery_pct": 67.16,
+            "rts_pct": 32.09
+          },
+          {
+            "name": "Haplunas Healing Eye Cream",
+            "sales": 20400.0,
+            "orders": 30,
+            "delivery_pct": 63.33,
+            "rts_pct": 36.67
+          }
+        ],
+        "Mindanao": [
+          {
+            "name": "Clear Sight V.3 Premium",
+            "sales": 1835938.0,
+            "orders": 3315,
+            "delivery_pct": 68.54,
+            "rts_pct": 29.74
+          },
+          {
+            "name": "TAGURO OIL",
+            "sales": 162809.0,
+            "orders": 456,
+            "delivery_pct": 60.53,
+            "rts_pct": 38.16
+          },
+          {
+            "name": "TAGURO ENLARGEMENT",
+            "sales": 145779.0,
+            "orders": 411,
+            "delivery_pct": 56.69,
+            "rts_pct": 43.31
+          },
+          {
+            "name": "CANPRO GUYABANO DRINK",
+            "sales": 68158.0,
+            "orders": 74,
+            "delivery_pct": 64.86,
+            "rts_pct": 27.03
+          },
+          {
+            "name": "Haplunas Healing Eye Cream",
+            "sales": 27799.0,
+            "orders": 47,
+            "delivery_pct": 57.45,
+            "rts_pct": 42.55
+          }
+        ]
+      }
+    },
+    "Elriz": {
+      "total_sales": 3503776.0,
+      "total_shipments": 4732,
+      "delivered_count": 4144,
+      "rts_count": 566,
+      "delivery_pct": 87.57,
+      "rts_pct": 11.96,
+      "top5_products": [
+        {
+          "name": "Clear Sight 3.0",
+          "sales": 3153156.0
+        },
+        {
+          "name": "Clear Sight",
+          "sales": 283069.0
+        },
+        {
+          "name": "Sinuxyl Nasal Spray",
+          "sales": 67052.0
+        },
+        {
+          "name": "Haplunas Balm",
+          "sales": 499.0
+        }
+      ],
+      "top5_by_region": {
+        "NCR": [
+          {
+            "name": "Clear Sight 3.0",
+            "sales": 421633.0,
+            "orders": 565,
+            "delivery_pct": 88.85,
+            "rts_pct": 10.97
+          },
+          {
+            "name": "Clear Sight",
+            "sales": 31185.0,
+            "orders": 44,
+            "delivery_pct": 86.36,
+            "rts_pct": 13.64
+          },
+          {
+            "name": "Sinuxyl Nasal Spray",
+            "sales": 4798.0,
+            "orders": 9,
+            "delivery_pct": 88.89,
+            "rts_pct": 11.11
+          }
+        ],
+        "Luzon": [
+          {
+            "name": "Clear Sight 3.0",
+            "sales": 1575824.0,
+            "orders": 2077,
+            "delivery_pct": 89.55,
+            "rts_pct": 10.16
+          },
+          {
+            "name": "Clear Sight",
+            "sales": 162566.0,
+            "orders": 221,
+            "delivery_pct": 94.12,
+            "rts_pct": 5.88
+          },
+          {
+            "name": "Sinuxyl Nasal Spray",
+            "sales": 32779.0,
+            "orders": 51,
+            "delivery_pct": 94.12,
+            "rts_pct": 5.88
+          }
+        ],
+        "Visayas": [
+          {
+            "name": "Clear Sight 3.0",
+            "sales": 537477.0,
+            "orders": 705,
+            "delivery_pct": 87.09,
+            "rts_pct": 12.2
+          },
+          {
+            "name": "Clear Sight",
+            "sales": 47135.0,
+            "orders": 69,
+            "delivery_pct": 88.41,
+            "rts_pct": 10.14
+          },
+          {
+            "name": "Sinuxyl Nasal Spray",
+            "sales": 16487.0,
+            "orders": 24,
+            "delivery_pct": 91.67,
+            "rts_pct": 4.17
+          }
+        ],
+        "Mindanao": [
+          {
+            "name": "Clear Sight 3.0",
+            "sales": 618222.0,
+            "orders": 882,
+            "delivery_pct": 80.73,
+            "rts_pct": 18.59
+          },
+          {
+            "name": "Clear Sight",
+            "sales": 42183.0,
+            "orders": 63,
+            "delivery_pct": 82.54,
+            "rts_pct": 14.29
+          },
+          {
+            "name": "Sinuxyl Nasal Spray",
+            "sales": 12988.0,
+            "orders": 21,
+            "delivery_pct": 85.71,
+            "rts_pct": 14.29
+          },
+          {
+            "name": "Haplunas Balm",
+            "sales": 499.0,
+            "orders": 1,
+            "delivery_pct": 100.0,
+            "rts_pct": 0.0
+          }
+        ]
+      }
+    }
+  },
+  "overview": {
+    "total_sales": 90855763.99,
+    "total_shipments": 138134,
+    "delivered_count": 113301,
+    "rts_count": 23259,
+    "delivery_pct": 82.02,
+    "rts_pct": 16.84
+  },
+  "generated_at": "2026-09-17T07:47:32.438239+00:00"
+}
