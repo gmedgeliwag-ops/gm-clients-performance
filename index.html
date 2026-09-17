@@ -12,20 +12,20 @@
     color-scheme: light dark;
     --bg:#f2f4f7; --surface:#ffffff; --surface-2:#f8f9fb; --border:#e1e5eb;
     --text-primary:#171b24; --text-secondary:#5b6472; --text-muted:#8a93a3;
-    --accent:#2a78d6; --accent-ink:#184f95;
+    --accent:#4b5563; --accent-ink:#27272a;
     --good:#0ca30c; --good-bg:#e6f6e6;
     --critical:#d03b3b; --critical-bg:#fbe9e9;
-    --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#4a3aa7;
+    --s1:#6b7280; --s2:#6b7280; --s3:#6b7280; --s4:#6b7280; --s5:#6b7280; --s6:#6b7280;
     --shadow: 0 1px 2px rgba(23,27,36,0.06), 0 1px 1px rgba(23,27,36,0.04);
   }
   @media (prefers-color-scheme: dark){
     :root{
       --bg:#14161b; --surface:#1c1f26; --surface-2:#20242c; --border:#2c3038;
       --text-primary:#f3f5f7; --text-secondary:#aab0bb; --text-muted:#7a8290;
-      --accent:#3987e5; --accent-ink:#bcd6f6;
+      --accent:#9ca3af; --accent-ink:#e5e7eb;
       --good:#3fbf3f; --good-bg:#173318;
       --critical:#e66767; --critical-bg:#3a1b1b;
-      --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#9085e9;
+      --s1:#9aa3af; --s2:#9aa3af; --s3:#9aa3af; --s4:#9aa3af; --s5:#9aa3af; --s6:#9aa3af;
       --shadow: 0 1px 2px rgba(0,0,0,0.35);
     }
   }
@@ -142,7 +142,7 @@
     <h1>GM Clients Performance</h1>
     <span class="badge"><span class="dot"></span><span id="asOf">Loading&hellip;</span></span>
   </div>
-  <div class="sub-note">Auto-refresh every ~10 minutes mula sa live order data ng 6 companies &middot; i-click ang row para makita ang Top 5 Products per region.</div>
+  <div class="sub-note">Snapshot ng live order data, auto-refresh every ~10 minutes &middot; i-click ang row para makita ang Top 5 Products per region.</div>
 
   <div class="date-bar">
     <div class="date-field">Mula <input type="date" id="dateFrom"></div>
@@ -349,7 +349,7 @@ document.getElementById('dateReset').addEventListener('click', ()=>{
 
 function setAsOf(iso){
   const d = new Date(iso);
-  document.getElementById('asOf').textContent = 'Updated ' + d.toLocaleString('en-PH', {dateStyle:'medium', timeStyle:'short'});
+  document.getElementById('asOf').textContent = 'Snapshot: ' + d.toLocaleString('en-PH', {dateStyle:'medium', timeStyle:'short'});
 }
 
 async function loadData(){
