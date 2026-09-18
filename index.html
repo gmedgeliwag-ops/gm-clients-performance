@@ -62,8 +62,8 @@
   }
   .date-reset{
     appearance:none; border:1px solid var(--border); background:var(--surface-2); cursor:pointer;
-    font-family:"IBM Plex Sans", sans-serif; font-weight:600; font-size:12px; color:var(--text-secondary);
-    padding:6px 12px; border-radius:999px;
+    color:var(--text-secondary); width:32px; height:32px; padding:0; border-radius:50%;
+    font-size:16px; line-height:1; display:inline-flex; align-items:center; justify-content:center;
   }
   .date-reset:hover{color:var(--text-primary); border-color:var(--text-muted);}
   .date-range-note{font-size:11.5px; color:var(--text-muted); margin-left:auto; font-family:"IBM Plex Mono", monospace;}
@@ -143,15 +143,15 @@
     <h1>GM OVERALL LOGISTICS PERFORMANCE</h1>
     <div class="masthead-right">
       <button class="shot-btn" id="shotBtn" title="Save as Image" aria-label="Save as Image">📸</button>
-      <span class="badge"><span class="dot"></span><span id="asOf">Loading&hellip;</span></span>
     </div>
   </div>
   <div class="sub-note">Snapshot ng live order data, auto-refresh every ~10 minutes &middot; i-click ang row para makita ang Top 5 Products per region.</div>
 
   <div class="date-bar">
-    <div class="date-field">Mula <input type="date" id="dateFrom"></div>
-    <div class="date-field">Hanggang <input type="date" id="dateTo"></div>
-    <button class="date-reset" id="dateReset">Month to Date</button>
+    <div class="date-field">From <input type="date" id="dateFrom"></div>
+    <div class="date-field">To <input type="date" id="dateTo"></div>
+    <button class="date-reset" id="dateReset" title="Month to Date" aria-label="Reset to Month to Date">↺</button>
+    <span class="badge"><span class="dot"></span><span id="asOf">Loading&hellip;</span></span>
     <span class="date-range-note" id="rangeNote"></span>
   </div>
 
@@ -361,7 +361,7 @@ document.getElementById('dateReset').addEventListener('click', ()=>{
 
 function setAsOf(iso){
   const d = new Date(iso);
-  document.getElementById('asOf').textContent = 'Snapshot: ' + d.toLocaleString('en-PH', {dateStyle:'medium', timeStyle:'short'});
+  document.getElementById('asOf').textContent = 'As of ' + d.toLocaleString('en-PH', {dateStyle:'medium', timeStyle:'short'});
 }
 
 async function loadData(){
@@ -387,18 +387,19 @@ async function loadData(){
 loadData();
 setInterval(loadData, REFRESH_MS);
 
+const CAPTURE_WIDTH = 1240;
+
 document.getElementById('shotBtn').addEventListener('click', async ()=>{
   const btn = document.getElementById('shotBtn');
   btn.disabled = true;
   const target = document.querySelector('.wrap');
-  const tableWraps = Array.from(target.querySelectorAll('.table-wrap'));
-  const prevOverflow = tableWraps.map(el => el.style.overflowX);
-  tableWraps.forEach(el => { el.style.overflowX = 'visible'; });
   try{
     const canvas = await html2canvas(target, {
       backgroundColor: css('--bg') || '#0f1115',
       scale: Math.min(2, window.devicePixelRatio || 1),
-      ignoreElements: (el) => el.id === 'shotBtn'
+      ignoreElements: (el) => el.id === 'shotBtn',
+      windowWidth: CAPTURE_WIDTH,
+      width: CAPTURE_WIDTH
     });
     const stamp = new Date().toISOString().replace(/[:T]/g,'-').slice(0,16);
     const link = document.createElement('a');
@@ -408,7 +409,6 @@ document.getElementById('shotBtn').addEventListener('click', async ()=>{
   }catch(err){
     alert('Hindi na-generate yung image: ' + err.message);
   }finally{
-    tableWraps.forEach((el,i) => { el.style.overflowX = prevOverflow[i]; });
     btn.disabled = false;
   }
 });
