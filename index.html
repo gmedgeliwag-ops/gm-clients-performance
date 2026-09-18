@@ -100,6 +100,9 @@
   .pct-good{color:var(--good); font-weight:600;}
   .pct-bad{color:var(--critical); font-weight:600;}
   .row-arrow{color:var(--text-muted);}
+  .attn-badge{display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700; color:var(--critical); background:var(--critical-bg); padding:2px 7px; border-radius:999px; letter-spacing:0.02em; text-transform:uppercase;}
+  .kpi-row.has5{grid-template-columns:repeat(5, minmax(0,1fr));}
+  @media (max-width:900px){ .kpi-row.has5{grid-template-columns:repeat(2, minmax(0,1fr));} }
 
   .back-btn{
     appearance:none; border:1px solid var(--border); background:var(--surface); cursor:pointer;
@@ -267,15 +270,22 @@ function kpiRow(target, d, salesLabel, ordersLabel){
   `;
 }
 
+const ATTENTION_RTS_THRESHOLD = 20;
+
 function renderOverview(from, to){
-  kpiRow(document.getElementById('ov-kpis'), overviewStats(from, to), 'Total Sales (lahat)', 'Total Orders');
+  const kpiEl = document.getElementById('ov-kpis');
+  kpiEl.classList.add('has5');
+  kpiRow(kpiEl, overviewStats(from, to), 'Total Sales (lahat)', 'Total Orders');
   const body = document.getElementById('cmp-body');
   body.innerHTML = '';
+  let attnCount = 0;
   Object.keys(DATA.companies).forEach(name=>{
     const d = companyStats(name, from, to);
+    const needsAttention = d.rts_pct >= ATTENTION_RTS_THRESHOLD;
+    if(needsAttention) attnCount++;
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td><span class="co-name"><span class="sw" style="background:${COMPANY_COLORS[name]}"></span>${name}</span></td>
+      <td><span class="co-name"><span class="sw" style="background:${COMPANY_COLORS[name]}"></span>${name}${needsAttention ? '<span class="attn-badge">⚠ Needs Attention</span>' : ''}</span></td>
       <td>${peso(d.total_sales)}</td>
       <td>${num(d.total_shipments)}</td>
       <td class="${d.delivery_pct>=80?'pct-good':''}">${d.delivery_pct.toFixed(1)}%</td>
@@ -285,6 +295,7 @@ function renderOverview(from, to){
     tr.addEventListener('click', ()=>openDetail(name));
     body.appendChild(tr);
   });
+  kpiEl.insertAdjacentHTML('beforeend', `<div class="kpi critical"><div class="label">Needs Attention</div><div class="value">${attnCount}</div><div class="sub">Company/companies na RTS% &ge; ${ATTENTION_RTS_THRESHOLD}%</div></div>`);
 }
 
 function regionCard(region, items, color){
