@@ -10,14 +10,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   :root{
-    color-scheme: light;
-    --bg:#ffffff; --surface:#ffffff; --surface-2:#f5f6f7; --border:#e2e5e9;
-    --text-primary:#171b24; --text-secondary:#5b6472; --text-muted:#8a93a3;
-    --accent:#2a78d6; --accent-ink:#184f95;
-    --good:#0ca30c; --good-bg:#e6f6e6;
-    --critical:#d03b3b; --critical-bg:#fbe9e9;
-    --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#4a3aa7;
-    --shadow: 0 1px 2px rgba(23,27,36,0.06), 0 1px 1px rgba(23,27,36,0.04);
+    color-scheme: dark;
+    --bg:#0f1115; --surface:#1a1d24; --surface-2:#20242c; --border:#2d323d;
+    --text-primary:#eef1f6; --text-secondary:#a4acba; --text-muted:#707888;
+    --accent:#5b9df0; --accent-ink:#8fc0ff;
+    --good:#39d17a; --good-bg:rgba(57,209,122,0.14);
+    --critical:#ff6b6b; --critical-bg:rgba(255,107,107,0.14);
+    --s1:#5b9df0; --s2:#f08a56; --s3:#35c894; --s4:#f0b429; --s5:#f091b2; --s6:#8b7ae0;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 1px 1px rgba(0,0,0,0.25);
   }
   *{box-sizing:border-box;}
   html,body{margin:0;}
@@ -34,8 +34,8 @@
   .masthead-right{display:flex; align-items:center; gap:10px;}
   .shot-btn{
     appearance:none; border:1px solid var(--border); background:var(--surface); cursor:pointer;
-    font-family:"IBM Plex Sans", sans-serif; font-weight:600; font-size:12px; color:var(--text-secondary);
-    padding:6px 12px; border-radius:999px; display:inline-flex; align-items:center; gap:6px;
+    width:32px; height:32px; padding:0; border-radius:50%; font-size:15px; line-height:1;
+    display:inline-flex; align-items:center; justify-content:center;
   }
   .shot-btn:hover{color:var(--text-primary); border-color:var(--text-muted);}
   .shot-btn:disabled{opacity:.6; cursor:default;}
@@ -142,7 +142,7 @@
   <div class="masthead">
     <h1>GM OVERALL LOGISTICS PERFORMANCE</h1>
     <div class="masthead-right">
-      <button class="shot-btn" id="shotBtn">📸 Save as Image</button>
+      <button class="shot-btn" id="shotBtn" title="Save as Image" aria-label="Save as Image">📸</button>
       <span class="badge"><span class="dot"></span><span id="asOf">Loading&hellip;</span></span>
     </div>
   </div>
@@ -389,14 +389,16 @@ setInterval(loadData, REFRESH_MS);
 
 document.getElementById('shotBtn').addEventListener('click', async ()=>{
   const btn = document.getElementById('shotBtn');
-  const original = btn.textContent;
   btn.disabled = true;
-  btn.textContent = 'Kinukuha...';
+  const target = document.querySelector('.wrap');
+  const tableWraps = Array.from(target.querySelectorAll('.table-wrap'));
+  const prevOverflow = tableWraps.map(el => el.style.overflowX);
+  tableWraps.forEach(el => { el.style.overflowX = 'visible'; });
   try{
-    const target = document.querySelector('.wrap');
     const canvas = await html2canvas(target, {
-      backgroundColor: css('--bg') || '#ffffff',
-      scale: Math.min(2, window.devicePixelRatio || 1)
+      backgroundColor: css('--bg') || '#0f1115',
+      scale: Math.min(2, window.devicePixelRatio || 1),
+      ignoreElements: (el) => el.id === 'shotBtn'
     });
     const stamp = new Date().toISOString().replace(/[:T]/g,'-').slice(0,16);
     const link = document.createElement('a');
@@ -406,8 +408,8 @@ document.getElementById('shotBtn').addEventListener('click', async ()=>{
   }catch(err){
     alert('Hindi na-generate yung image: ' + err.message);
   }finally{
+    tableWraps.forEach((el,i) => { el.style.overflowX = prevOverflow[i]; });
     btn.disabled = false;
-    btn.textContent = original;
   }
 });
 </script>
