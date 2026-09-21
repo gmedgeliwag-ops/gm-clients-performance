@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root{
     color-scheme: dark;
@@ -53,7 +54,7 @@
   .date-bar{
     display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px;
     background:var(--surface); border:1px solid var(--border); border-radius:12px;
-    padding:12px 16px; margin-bottom:22px; box-shadow:var(--shadow);
+    padding:12px 16px; margin-bottom:14px; box-shadow:var(--shadow);
   }
   .date-field{display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--text-secondary); font-weight:600;}
   .date-field input{
@@ -68,8 +69,65 @@
   .date-reset:hover{color:var(--text-primary); border-color:var(--text-muted);}
   .date-range-note{font-size:11.5px; color:var(--text-muted); margin-left:auto; font-family:"IBM Plex Mono", monospace;}
 
-  .view{display:none;}
-  .view.active{display:block;}
+  .preset-bar{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;}
+  .preset-btn{
+    appearance:none; border:1px solid var(--border); background:var(--surface-2); cursor:pointer;
+    color:var(--text-secondary); font-family:"IBM Plex Sans", sans-serif; font-weight:600; font-size:12px;
+    padding:6px 12px; border-radius:999px;
+  }
+  .preset-btn:hover{color:var(--text-primary); border-color:var(--text-muted);}
+  .preset-btn.active{background:var(--accent); color:#0b0d11; border-color:var(--accent);}
+
+  .search-bar{
+    display:flex; align-items:center; gap:10px;
+    background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:10px 14px; margin-bottom:22px; box-shadow:var(--shadow);
+  }
+  .search-bar input{
+    flex:1; background:transparent; border:none; outline:none;
+    font-family:"IBM Plex Sans", sans-serif; font-size:13.5px; color:var(--text-primary);
+  }
+  .search-bar input::placeholder{color:var(--text-muted);}
+  .search-icon{color:var(--text-muted); font-size:14px;}
+  .search-clear{
+    appearance:none; border:none; background:none; color:var(--text-muted); cursor:pointer;
+    font-size:13px; padding:2px 6px; display:none;
+  }
+  .search-clear.show{display:inline-block;}
+  .funnel-btn{
+    position:relative; appearance:none; border:1px solid var(--border); background:var(--surface-2); cursor:pointer;
+    color:var(--text-secondary); font-size:14px; padding:6px 10px; border-radius:8px; flex:none;
+  }
+  .funnel-btn:hover{color:var(--text-primary); border-color:var(--text-muted);}
+  .funnel-btn.active{color:var(--accent-ink); border-color:var(--accent);}
+  .funnel-count{
+    position:absolute; top:-6px; right:-6px; background:var(--accent); color:#0b0d11;
+    font-size:9px; font-weight:700; border-radius:999px; padding:1px 5px; line-height:1.4; font-family:"IBM Plex Mono", monospace;
+  }
+
+  .filter-overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:40;}
+  .filter-overlay.show{display:block;}
+  .filter-panel{
+    position:fixed; top:0; right:-320px; width:300px; max-width:86vw; height:100%; background:var(--surface);
+    border-left:1px solid var(--border); box-shadow:-4px 0 24px rgba(0,0,0,0.4);
+    padding:20px; z-index:41; transition:right .2s ease; overflow-y:auto;
+  }
+  .filter-panel.show{right:0;}
+  .filter-panel-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;}
+  .filter-panel-head h3{font-size:15px; font-weight:700;}
+  .filter-close{appearance:none; border:none; background:none; color:var(--text-muted); cursor:pointer; font-size:16px;}
+  .filter-close:hover{color:var(--text-primary);}
+  .filter-section{margin-bottom:20px;}
+  .filter-section-title{font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); margin-bottom:10px;}
+  .filter-checks{display:flex; flex-direction:column; gap:9px; max-height:240px; overflow-y:auto;}
+  .filter-check, .filter-toggle{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-secondary); cursor:pointer;}
+  .filter-check input, .filter-toggle input{accent-color:var(--accent);}
+  .filter-reset{
+    appearance:none; width:100%; border:1px solid var(--border); background:var(--surface-2); color:var(--text-secondary);
+    cursor:pointer; padding:9px; border-radius:8px; font-size:12.5px; font-weight:600;
+  }
+  .filter-reset:hover{color:var(--text-primary); border-color:var(--text-muted);}
+  .orders-note{font-size:11.5px; color:var(--text-muted); margin-top:8px;}
 
   .kpi-row{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px; margin-bottom:22px;}
   @media (max-width:760px){ .kpi-row{grid-template-columns:repeat(2, minmax(0,1fr));} }
@@ -86,46 +144,84 @@
   .card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px; box-shadow:var(--shadow);}
 
   .table-wrap{overflow-x:auto;}
-  table.cmp{width:100%; border-collapse:collapse; font-size:13.5px; min-width:620px;}
+  table.cmp{width:100%; border-collapse:collapse; font-size:13.5px; min-width:560px;}
   table.cmp th, table.cmp td{padding:11px 12px; text-align:right; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums;}
   table.cmp th:first-child, table.cmp td:first-child{text-align:left;}
   table.cmp th{color:var(--text-muted); font-size:11px; text-transform:uppercase; letter-spacing:0.04em; font-weight:700;}
   table.cmp td{font-family:"IBM Plex Mono", monospace;}
   table.cmp td:first-child{font-family:"IBM Plex Sans", sans-serif; font-weight:600;}
-  table.cmp tbody tr{cursor:pointer;}
-  table.cmp tbody tr:hover{background:var(--surface-2);}
   table.cmp tbody tr:last-child td{border-bottom:none;}
-  .co-name{display:flex; align-items:center; gap:9px;}
+  table.cmp tbody tr:hover{background:var(--surface-2);}
+  .table-empty{color:var(--text-muted); font-size:12.5px; font-style:italic; padding:16px 0;}
+
   .sw{width:9px; height:9px; border-radius:3px; flex:none;}
   .pct-good{color:var(--good); font-weight:600;}
   .pct-bad{color:var(--critical); font-weight:600;}
-  .row-arrow{color:var(--text-muted);}
   .attn-badge{display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700; color:var(--critical); background:var(--critical-bg); padding:2px 7px; border-radius:999px; letter-spacing:0.02em; text-transform:uppercase;}
   .kpi-row.has5{grid-template-columns:repeat(5, minmax(0,1fr));}
   @media (max-width:900px){ .kpi-row.has5{grid-template-columns:repeat(2, minmax(0,1fr));} }
 
-  .back-btn{
-    appearance:none; border:1px solid var(--border); background:var(--surface); cursor:pointer;
-    font-family:"IBM Plex Sans", sans-serif; font-weight:600; font-size:13px; color:var(--text-secondary);
-    padding:8px 14px; border-radius:9px; margin-bottom:16px; display:inline-flex; align-items:center; gap:6px;
-  }
-  .back-btn:hover{color:var(--text-primary); border-color:var(--text-muted);}
+  .status-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:22px;}
+  @media (max-width:760px){ .status-grid{grid-template-columns:1fr;} }
+  .status-card-title{font-size:13px; font-weight:700; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:12px;}
+  .status-total-row td{font-weight:700; color:var(--text-primary); border-top:2px solid var(--border); border-bottom:none;}
 
-  .detail-head{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
-  .detail-head .swatch{width:14px; height:14px; border-radius:4px;}
-  .detail-head h2{font-size:22px; font-weight:800;}
+  .company-list{display:flex; flex-direction:column; gap:14px; margin-bottom:22px;}
+  .co-card{background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); overflow:hidden;}
+  .co-card > summary{list-style:none; cursor:pointer; display:flex; align-items:center; gap:16px; padding:16px 20px;}
+  .co-card > summary::-webkit-details-marker{display:none;}
+  .co-card > summary:hover{background:var(--surface-2);}
+  .co-id{display:flex; align-items:center; gap:9px; font-weight:600; font-size:14.5px; flex:1 1 auto; min-width:140px;}
+  .co-stats{display:grid; grid-template-columns:repeat(4, minmax(70px,90px)); gap:18px;}
+  .stat{text-align:right;}
+  .stat-label{display:block; font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;}
+  .stat-value{display:block; font-family:"IBM Plex Mono", monospace; font-size:14px; font-weight:600; margin-top:2px; font-variant-numeric:tabular-nums;}
+  .chevron{color:var(--text-muted); font-size:14px; flex:none; transition:transform .15s ease;}
+  .co-card[open] .chevron{transform:rotate(180deg);}
+  .co-body{padding:4px 20px 20px; border-top:1px solid var(--border);}
+  .co-body .region-grid{margin-top:16px;}
+  @media (max-width:760px){
+    .co-summary{flex-wrap:wrap;}
+    .co-stats{grid-template-columns:repeat(2, minmax(70px,1fr)); flex:1 1 100%; order:1;}
+  }
+
+  .tabs{display:flex; gap:4px; margin:16px 0 14px; border-bottom:1px solid var(--border); flex-wrap:wrap;}
+  .tab-btn{
+    appearance:none; border:none; background:none; cursor:pointer;
+    font-family:"IBM Plex Sans", sans-serif; font-weight:600; font-size:12.5px; color:var(--text-muted);
+    padding:9px 14px; border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .tab-btn:hover{color:var(--text-secondary);}
+  .tab-btn.active{color:var(--accent-ink); border-bottom-color:var(--accent-ink);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  .table-toolbar{display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;}
+  .mini-search{
+    flex:1; min-width:160px; font-family:"IBM Plex Sans", sans-serif; font-size:12.5px; color:var(--text-primary);
+    background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:7px 10px;
+  }
+  .export-btn{
+    appearance:none; border:1px solid var(--border); background:var(--surface-2); cursor:pointer;
+    font-family:"IBM Plex Sans", sans-serif; font-weight:600; font-size:12px; color:var(--text-secondary);
+    padding:7px 12px; border-radius:8px; white-space:nowrap;
+  }
+  .export-btn:hover{color:var(--text-primary); border-color:var(--text-muted);}
+
+  .chart-wrap{position:relative; height:220px; margin-bottom:18px;}
+  .chart-wrap.short{height:200px;}
 
   .region-grid{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px;}
   @media (max-width:980px){ .region-grid{grid-template-columns:repeat(2, minmax(0,1fr));} }
   @media (max-width:520px){ .region-grid{grid-template-columns:1fr;} }
-  .region-card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:15px 16px; box-shadow:var(--shadow);}
+  .region-card{background:var(--surface-2); border:1px solid var(--border); border-radius:14px; padding:15px 16px;}
   .region-card h3{font-size:13.5px; font-weight:700; margin-bottom:10px;}
   .region-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
   .region-list li{display:flex; flex-direction:column; gap:4px;}
   .p-top{display:flex; justify-content:space-between; gap:8px; font-size:12.5px;}
   .p-name{color:var(--text-primary); font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
   .p-val{font-family:"IBM Plex Mono", monospace; color:var(--text-secondary); flex:none; font-variant-numeric:tabular-nums; font-size:11.5px;}
-  .p-track{background:var(--surface-2); border-radius:4px; height:6px; overflow:hidden;}
+  .p-track{background:var(--surface); border-radius:4px; height:6px; overflow:hidden;}
   .p-fill{height:100%; border-radius:4px;}
   .p-badges{display:flex; gap:6px; font-size:10.5px; font-family:"IBM Plex Mono", monospace;}
   .pill{padding:1px 6px; border-radius:999px; font-weight:600;}
@@ -135,6 +231,7 @@
 
   footer{margin-top:28px; color:var(--text-muted); font-size:11.5px; text-align:center;}
   .load-note{color:var(--text-muted); font-size:13px; padding:24px 0;}
+  .no-results{color:var(--text-muted); font-size:13px; padding:24px 0; text-align:center; font-style:italic;}
 </style>
 </head>
 <body>
@@ -145,7 +242,7 @@
       <button class="shot-btn" id="shotBtn" title="Save as Image" aria-label="Save as Image">📸</button>
     </div>
   </div>
-  <div class="sub-note">Snapshot ng live order data, auto-refresh every ~10 minutes &middot; i-click ang row para makita ang Top 5 Products per region.</div>
+  <div class="sub-note">Snapshot ng live order data, auto-refresh &middot; i-click ang company card para makita ang Overview / Products / RTS Reasons / Tele-Sales.</div>
 
   <div class="date-bar">
     <div class="date-field">From <input type="date" id="dateFrom"></div>
@@ -155,50 +252,109 @@
     <span class="date-range-note" id="rangeNote"></span>
   </div>
 
+  <div class="preset-bar" id="presetBar">
+    <button class="preset-btn" data-preset="today">Today</button>
+    <button class="preset-btn" data-preset="yesterday">Yesterday</button>
+    <button class="preset-btn" data-preset="week">This Week</button>
+    <button class="preset-btn" data-preset="last7">Last 7 Days</button>
+    <button class="preset-btn active" data-preset="month">This Month</button>
+    <button class="preset-btn" data-preset="last30">Last 30 Days</button>
+    <button class="preset-btn" data-preset="year">This Year</button>
+  </div>
+
+  <div class="search-bar">
+    <span class="search-icon">🔎</span>
+    <input type="text" id="globalSearch" placeholder="Search company, product, or Tele-Sales handler...">
+    <button class="search-clear" id="searchClear">✕</button>
+    <button class="funnel-btn" id="funnelBtn" title="Filters" aria-label="Filters">🔽<span class="funnel-count" id="funnelCount" style="display:none;"></span></button>
+  </div>
+
+  <div class="filter-overlay" id="filterOverlay"></div>
+  <aside class="filter-panel" id="filterPanel">
+    <div class="filter-panel-head">
+      <h3>Filters</h3>
+      <button class="filter-close" id="filterClose" aria-label="Close">✕</button>
+    </div>
+    <div class="filter-section">
+      <div class="filter-section-title">Companies</div>
+      <div class="filter-checks" id="filterCompanies"></div>
+    </div>
+    <div class="filter-section">
+      <div class="filter-section-title">Region (sa loob ng company view)</div>
+      <div class="filter-checks" id="filterRegions"></div>
+    </div>
+    <div class="filter-section">
+      <label class="filter-toggle"><input type="checkbox" id="filterAttention"> Needs Attention lang</label>
+    </div>
+    <button class="filter-reset" id="filterReset">I-reset ang filters</button>
+  </aside>
+
   <div id="loadNote" class="load-note">Kinukuha yung datos&hellip;</div>
 
-  <div class="view" id="view-overview">
-    <div class="kpi-row" id="ov-kpis"></div>
-    <div class="card table-wrap">
-      <div class="section-title">Performance per Company</div>
-      <table class="cmp">
-        <thead><tr><th>Company</th><th>Total Sales</th><th>Total Orders</th><th>Delivery %</th><th>RTS %</th><th></th></tr></thead>
-        <tbody id="cmp-body"></tbody>
-      </table>
+  <div class="kpi-row" id="ov-kpis"></div>
+
+  <div class="section-title">Order Fulfillment Status</div>
+  <div class="status-grid">
+    <div class="card">
+      <div class="status-card-title">Unfulfilled</div>
+      <div class="table-wrap"><table class="cmp" id="unfulfilled-table"></table></div>
+    </div>
+    <div class="card">
+      <div class="status-card-title">Fulfilled Sales</div>
+      <div class="table-wrap"><table class="cmp" id="fulfilled-table"></table></div>
     </div>
   </div>
 
-  <div class="view" id="view-detail">
-    <button class="back-btn" id="backBtn">&larr; Overview</button>
-    <div class="detail-head"><span class="swatch" id="detailSwatch"></span><h2 id="detailName"></h2></div>
-    <div class="kpi-row" id="detail-kpis"></div>
-    <div class="section-title">Top 5 Products per Region</div>
-    <div class="region-grid" id="detail-regions"></div>
-  </div>
+  <div class="section-title">Performance per Company</div>
+  <div class="company-list" id="company-list"></div>
+  <div class="no-results" id="noResults" style="display:none;">Walang company/product na tumugma sa search mo.</div>
 
-  <footer>Sales = Unit price ng Delivered orders &middot; Total Orders = Shipped + Returning + Returned + Returned (fee) + Delivered &middot; Batay sa "Day created" ng order &middot; Delivery% at RTS% kasama per-product breakdown sa region view</footer>
+  <footer>Sales = Unit price ng Delivered orders &middot; Total Orders = lahat ng order anumang status &middot; Delivery%/RTS% base sa Shipped + Returning + Returned + Returned (fee) + Delivered lang &middot; Unfulfilled = New/Waiting/Packaging/Ordered (Purchasing)/Printed/Confirmed/Wait for printing/Awaiting Stock/Waiting for pick up/Canceled &middot; Fulfilled Sales = Shipped + Delivered + RTS &middot; Batay sa "Day created" ng order &middot; Tele-Sales Upsell mula sa mga order na may ID "_" (attributed sa Item handler)</footer>
 </div>
 
 <script>
 const REGIONS = ["NCR","Luzon","Visayas","Mindanao"];
 const SLOTS = ["s1","s2","s3","s4","s5","s6"];
-const REFRESH_MS = 180_000;
+const REFRESH_MS = 60_000;
+const SUPABASE_URL = "https://slydgjplswsijhqeyrwa.supabase.co";
+const SUPABASE_KEY = "sb_publishable_Kz-4VwE898eQVmDCTc89Mw_DoFC93dF";
+const PAGE_SIZE = 1000;
 
 let DATA = null;
 let COMPANY_COLORS = {};
-let currentCompany = null;
 let firstLoad = true;
+let searchTerm = '';
+const CHARTS = {};
+const ORDERS_LIMIT = 500;
+const ORDERS_CACHE = {};
+const KNOWN_COMPANIES = new Set();
+const FILTER = { companies: new Set(), regions: new Set(REGIONS), attentionOnly: false };
 
 function peso(n){ return new Intl.NumberFormat('en-PH', {style:'currency', currency:'PHP', maximumFractionDigits:0}).format(n); }
 function num(n){ return new Intl.NumberFormat('en-PH').format(n); }
 function css(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
 function pct(n,d){ return d ? (n/d*100) : 0; }
-function toISO(d){ return d.toISOString().slice(0,10); }
+function toISO(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function slug(name){ return name.toLowerCase().replace(/[^a-z0-9]/g,''); }
 
 function monthToDateRange(){
   const now = new Date();
   const from = new Date(now.getFullYear(), now.getMonth(), 1);
   return { from: toISO(from), to: toISO(now) };
+}
+
+function presetRange(kind){
+  const startOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const today = startOfDay(new Date());
+  switch(kind){
+    case 'today': return { from: toISO(today), to: toISO(today) };
+    case 'yesterday': { const y = new Date(today); y.setDate(y.getDate()-1); return { from: toISO(y), to: toISO(y) }; }
+    case 'week': { const d = new Date(today); const dow = (d.getDay()+6)%7; d.setDate(d.getDate()-dow); return { from: toISO(d), to: toISO(today) }; }
+    case 'last7': { const d = new Date(today); d.setDate(d.getDate()-6); return { from: toISO(d), to: toISO(today) }; }
+    case 'last30': { const d = new Date(today); d.setDate(d.getDate()-29); return { from: toISO(d), to: toISO(today) }; }
+    case 'year': { const d = new Date(today.getFullYear(), 0, 1); return { from: toISO(d), to: toISO(today) }; }
+    case 'month': default: return monthToDateRange();
+  }
 }
 
 function getRange(){
@@ -212,27 +368,82 @@ function setRange(r){
 
 function companyStats(company, from, to){
   const daily = (DATA.companies[company] && DATA.companies[company].daily) || [];
-  let orders=0, delivered=0, rts=0, sales=0;
+  let allOrders=0, orders=0, delivered=0, rts=0, sales=0;
   for(const d of daily){
     if(d.date < from || d.date > to) continue;
-    orders += d.orders; delivered += d.delivered; rts += d.rts; sales += d.sales;
+    allOrders += (d.all_orders ?? d.orders); orders += d.orders; delivered += d.delivered; rts += d.rts; sales += d.sales;
   }
   return {
-    total_sales: sales, total_shipments: orders, delivered_count: delivered, rts_count: rts,
+    total_sales: sales, total_orders: allOrders, total_shipments: orders, delivered_count: delivered, rts_count: rts,
     delivery_pct: pct(delivered, orders), rts_pct: pct(rts, orders)
   };
 }
 
 function overviewStats(from, to){
-  let orders=0, delivered=0, rts=0, sales=0;
+  let allOrders=0, orders=0, delivered=0, rts=0, sales=0;
   for(const company of Object.keys(DATA.companies)){
     const s = companyStats(company, from, to);
-    orders += s.total_shipments; delivered += s.delivered_count; rts += s.rts_count; sales += s.total_sales;
+    allOrders += s.total_orders; orders += s.total_shipments; delivered += s.delivered_count; rts += s.rts_count; sales += s.total_sales;
   }
   return {
-    total_sales: sales, total_shipments: orders, delivered_count: delivered, rts_count: rts,
+    total_sales: sales, total_orders: allOrders, total_shipments: orders, delivered_count: delivered, rts_count: rts,
     delivery_pct: pct(delivered, orders), rts_pct: pct(rts, orders)
   };
+}
+
+const UNFULFILLED_STATUSES = [
+  'New', 'Waiting', 'Packaging', 'Ordered (Purchasing)', 'Printed',
+  'Confirmed', 'Wait for printing', 'Awaiting Stock', 'Waiting for pick up', 'Canceled'
+];
+const FULFILLED_GROUPS = [
+  { label: 'Shipped', statuses: ['Shipped'] },
+  { label: 'Delivered', statuses: ['Delivered'] },
+  { label: 'RTS (Returning · Returned · Returned fee)', statuses: ['Returning', 'Returned', 'Returned (fee)'] },
+];
+
+function statusTotals(from, to){
+  const totals = {};
+  for(const company of Object.keys(DATA.companies)){
+    const rows = (DATA.companies[company] && DATA.companies[company].status_daily) || [];
+    for(const r of rows){
+      if(r.date < from || r.date > to) continue;
+      if(!totals[r.status]) totals[r.status] = { count: 0, value: 0 };
+      totals[r.status].count += r.count;
+      totals[r.status].value += r.value;
+    }
+  }
+  return totals;
+}
+
+function statusRowHTML(label, count, value){
+  return `<tr><td>${label}</td><td>${num(count)}</td><td>${peso(value)}</td></tr>`;
+}
+
+function renderStatusBreakdown(from, to){
+  const totals = statusTotals(from, to);
+
+  let unCount = 0, unValue = 0;
+  const unRows = UNFULFILLED_STATUSES.map(status => {
+    const t = totals[status] || { count: 0, value: 0 };
+    unCount += t.count; unValue += t.value;
+    return statusRowHTML(status, t.count, t.value);
+  }).join('');
+
+  let fCount = 0, fValue = 0;
+  const fRows = FULFILLED_GROUPS.map(g => {
+    let c = 0, v = 0;
+    g.statuses.forEach(s => { const t = totals[s] || { count: 0, value: 0 }; c += t.count; v += t.value; });
+    fCount += c; fValue += v;
+    return statusRowHTML(g.label, c, v);
+  }).join('');
+
+  document.getElementById('unfulfilled-table').innerHTML =
+    `<thead><tr><th>Status</th><th>Orders</th><th>Value</th></tr></thead>
+     <tbody>${unRows}<tr class="status-total-row"><td>Total</td><td>${num(unCount)}</td><td>${peso(unValue)}</td></tr></tbody>`;
+
+  document.getElementById('fulfilled-table').innerHTML =
+    `<thead><tr><th>Status</th><th>Orders</th><th>Sales</th></tr></thead>
+     <tbody>${fRows}<tr class="status-total-row"><td>Total</td><td>${num(fCount)}</td><td>${peso(fValue)}</td></tr></tbody>`;
 }
 
 function regionTop5(company, from, to){
@@ -240,7 +451,7 @@ function regionTop5(company, from, to){
   const agg = {};
   for(const r of rows){
     if(r.date < from || r.date > to) continue;
-    const key = r.region + '' + r.product;
+    const key = r.region + '' + r.product;
     if(!agg[key]) agg[key] = { region: r.region, product: r.product, orders:0, delivered:0, rts:0, sales:0 };
     const a = agg[key];
     a.orders += r.orders; a.delivered += r.delivered; a.rts += r.rts; a.sales += r.sales;
@@ -261,41 +472,254 @@ function regionTop5(company, from, to){
   return result;
 }
 
+function productPerformance(company, from, to){
+  const rows = (DATA.companies[company] && DATA.companies[company].region_product_daily) || [];
+  const agg = {};
+  for(const r of rows){
+    if(r.date < from || r.date > to) continue;
+    if(!agg[r.product]) agg[r.product] = { product: r.product, orders:0, delivered:0, rts:0, sales:0 };
+    const a = agg[r.product];
+    a.orders += r.orders; a.delivered += r.delivered; a.rts += r.rts; a.sales += r.sales;
+  }
+  return Object.values(agg)
+    .map(a => ({...a, delivery_pct: pct(a.delivered, a.orders), rts_pct: pct(a.rts, a.orders)}))
+    .sort((a,b) => b.sales - a.sales);
+}
+
+function rtsReasonBreakdown(company, from, to){
+  const rows = (DATA.companies[company] && DATA.companies[company].rts_reasons_daily) || [];
+  const agg = {};
+  let total = 0;
+  for(const r of rows){
+    if(r.date < from || r.date > to) continue;
+    agg[r.reason] = (agg[r.reason] || 0) + r.count;
+    total += r.count;
+  }
+  return Object.entries(agg)
+    .map(([reason,count]) => ({reason, count, share: pct(count, total)}))
+    .sort((a,b) => b.count - a.count);
+}
+
+function telesalesPerf(company, from, to){
+  const rows = (DATA.companies[company] && DATA.companies[company].telesales_daily) || [];
+  const agg = {};
+  for(const r of rows){
+    if(r.date < from || r.date > to) continue;
+    if(!agg[r.handler]) agg[r.handler] = { handler: r.handler, count:0, sales:0 };
+    agg[r.handler].count += r.count;
+    agg[r.handler].sales += r.sales;
+  }
+  return Object.values(agg).sort((a,b) => b.sales - a.sales);
+}
+
+function dailyTrend(company, from, to){
+  const daily = (DATA.companies[company] && DATA.companies[company].daily) || [];
+  return daily.filter(d => d.date >= from && d.date <= to);
+}
+
 function kpiRow(target, d, salesLabel, ordersLabel){
   target.innerHTML = `
     <div class="kpi accent"><div class="label">${salesLabel}</div><div class="value">${peso(d.total_sales)}</div><div class="sub">Unit price &middot; Delivered orders</div></div>
-    <div class="kpi"><div class="label">${ordersLabel}</div><div class="value">${num(d.total_shipments)}</div><div class="sub">Shipped + Returning + Returned + Delivered</div></div>
-    <div class="kpi good"><div class="label">Delivery %</div><div class="value">${d.delivery_pct.toFixed(1)}%</div><div class="sub">${num(d.delivered_count)} delivered</div></div>
-    <div class="kpi critical"><div class="label">RTS %</div><div class="value">${d.rts_pct.toFixed(1)}%</div><div class="sub">${num(d.rts_count)} returned/returning</div></div>
+    <div class="kpi"><div class="label">${ordersLabel}</div><div class="value">${num(d.total_orders)}</div><div class="sub">Lahat ng order, anumang status</div></div>
+    <div class="kpi good"><div class="label">Delivery %</div><div class="value">${d.delivery_pct.toFixed(1)}%</div><div class="sub">${num(d.delivered_count)} of ${num(d.total_shipments)} shipped</div></div>
+    <div class="kpi critical"><div class="label">RTS %</div><div class="value">${d.rts_pct.toFixed(1)}%</div><div class="sub">${num(d.rts_count)} of ${num(d.total_shipments)} shipped</div></div>
   `;
 }
 
 const ATTENTION_RTS_THRESHOLD = 20;
 
-function renderOverview(from, to){
-  const kpiEl = document.getElementById('ov-kpis');
-  kpiEl.classList.add('has5');
-  kpiRow(kpiEl, overviewStats(from, to), 'Total Sales (lahat)', 'Total Orders');
-  const body = document.getElementById('cmp-body');
-  body.innerHTML = '';
-  let attnCount = 0;
-  Object.keys(DATA.companies).forEach(name=>{
-    const d = companyStats(name, from, to);
-    const needsAttention = d.rts_pct >= ATTENTION_RTS_THRESHOLD;
-    if(needsAttention) attnCount++;
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><span class="co-name"><span class="sw" style="background:${COMPANY_COLORS[name]}"></span>${name}${needsAttention ? '<span class="attn-badge">⚠ Needs Attention</span>' : ''}</span></td>
-      <td>${peso(d.total_sales)}</td>
-      <td>${num(d.total_shipments)}</td>
-      <td class="${d.delivery_pct>=80?'pct-good':''}">${d.delivery_pct.toFixed(1)}%</td>
-      <td class="${d.rts_pct>=18?'pct-bad':''}">${d.rts_pct.toFixed(1)}%</td>
-      <td class="row-arrow">&rarr;</td>
-    `;
-    tr.addEventListener('click', ()=>openDetail(name));
-    body.appendChild(tr);
+function toCSV(rows, columns){
+  const esc = v => { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s; };
+  const header = columns.map(c => esc(c.label)).join(',');
+  const lines = rows.map(r => columns.map(c => esc(r[c.key])).join(','));
+  return [header, ...lines].join('\r\n');
+}
+
+function downloadCSV(filename, rows, columns){
+  const csv = toCSV(rows, columns);
+  const blob = new Blob(['﻿' + csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function renderTable(target, rows, columns, emptyMsg){
+  if(!rows.length){
+    target.innerHTML = `<div class="table-empty">${emptyMsg}</div>`;
+    return;
+  }
+  const head = columns.map(c => `<th>${c.label}</th>`).join('');
+  const body = rows.map(r => `<tr>${columns.map(c => `<td>${c.render ? c.render(r) : r[c.key]}</td>`).join('')}</tr>`).join('');
+  target.innerHTML = `<table class="cmp"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+}
+
+function destroyChart(id){
+  if(CHARTS[id]){ CHARTS[id].destroy(); delete CHARTS[id]; }
+}
+
+function renderTrendChart(canvasId, rows){
+  destroyChart(canvasId);
+  const ctx = document.getElementById(canvasId);
+  if(!ctx) return;
+  CHARTS[canvasId] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: rows.map(r => r.date.slice(5)),
+      datasets: [
+        { label:'Orders', data: rows.map(r=>r.orders), borderColor: css('--accent'), backgroundColor:'transparent', tension:0.25, pointRadius:0 },
+        { label:'Delivered', data: rows.map(r=>r.delivered), borderColor: css('--good'), backgroundColor:'transparent', tension:0.25, pointRadius:0 },
+        { label:'RTS', data: rows.map(r=>r.rts), borderColor: css('--critical'), backgroundColor:'transparent', tension:0.25, pointRadius:0 },
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index', intersect:false},
+      plugins:{ legend:{labels:{color: css('--text-secondary'), boxWidth:10, font:{size:11}}} },
+      scales:{
+        x:{ ticks:{color: css('--text-muted'), font:{size:10}, maxTicksLimit:10}, grid:{color: css('--border')} },
+        y:{ ticks:{color: css('--text-muted'), font:{size:10}}, grid:{color: css('--border')}, beginAtZero:true }
+      }
+    }
   });
-  kpiEl.insertAdjacentHTML('beforeend', `<div class="kpi critical"><div class="label">Needs Attention</div><div class="value">${attnCount}</div><div class="sub">Company/companies na RTS% &ge; ${ATTENTION_RTS_THRESHOLD}%</div></div>`);
+}
+
+function renderRtsChart(canvasId, rows){
+  destroyChart(canvasId);
+  const ctx = document.getElementById(canvasId);
+  if(!ctx) return;
+  const top = rows.slice(0, 8);
+  CHARTS[canvasId] = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: top.map(r => r.reason.length > 28 ? r.reason.slice(0,26)+'…' : r.reason),
+      datasets: [{ label:'RTS count', data: top.map(r=>r.count), backgroundColor: css('--critical') }]
+    },
+    options: {
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{
+        x:{ ticks:{color: css('--text-muted'), font:{size:10}}, grid:{color: css('--border')}, beginAtZero:true },
+        y:{ ticks:{color: css('--text-secondary'), font:{size:10.5}}, grid:{display:false} }
+      }
+    }
+  });
+}
+
+function orderColumns(){
+  return [
+    {key:'day_created', label:'Date'},
+    {key:'order_id', label:'Order ID'},
+    {key:'tracking_number', label:'Tracking #'},
+    {key:'status', label:'Status'},
+    {key:'product_name', label:'Product'},
+    {key:'region_norm', label:'Region'},
+    {key:'unit_price', label:'Price', render:r=>peso(r.unit_price || 0)},
+    {key:'item_handler', label:'Item Handler'},
+    {key:'rts_reason_norm', label:'RTS Reason'},
+  ];
+}
+
+async function fetchOrders(company, from, to, term){
+  const params = new URLSearchParams();
+  params.append('select', 'order_id,tracking_number,status,product_name,region_norm,day_created,unit_price,item_handler,rts_reason_norm');
+  params.append('company', `eq.${company}`);
+  params.append('day_created', `gte.${from}`);
+  params.append('day_created', `lte.${to}`);
+  params.append('order', 'day_created.desc');
+  params.append('limit', String(ORDERS_LIMIT));
+  const cleanTerm = term.trim().replace(/[%,()]/g, '');
+  if(cleanTerm){
+    params.append('or', `(order_id.ilike.*${cleanTerm}*,tracking_number.ilike.*${cleanTerm}*)`);
+  }
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/orders?${params.toString()}`, {
+    headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+    cache: 'no-store',
+  });
+  if(!res.ok) throw new Error(`orders HTTP ${res.status}`);
+  return res.json();
+}
+
+async function loadOrdersTab(name, s){
+  const {from, to} = getRange();
+  const term = (document.getElementById(`osearch-${s}`) || {}).value || '';
+  const wrap = document.getElementById(`tbl-orders-${s}`);
+  const note = document.getElementById(`onote-${s}`);
+  if(!wrap) return;
+  wrap.innerHTML = `<div class="table-empty">Kinukuha ang mga order&hellip;</div>`;
+  if(note) note.textContent = '';
+  try{
+    const rows = await fetchOrders(name, from, to, term);
+    ORDERS_CACHE[s] = rows;
+    renderTable(wrap, rows, orderColumns(), 'Walang order na tumugma sa date range/search na ito.');
+    if(note){
+      note.textContent = rows.length >= ORDERS_LIMIT
+        ? `Pinakabagong ${ORDERS_LIMIT} order lang ipinapakita. Gamitin ang search para mas makitid.`
+        : `${num(rows.length)} order sa date range na ito.`;
+    }
+  }catch(err){
+    wrap.innerHTML = `<div class="table-empty">Hindi makuha ang orders (${err.message}).</div>`;
+  }
+}
+
+function companyCardHTML(name, d, needsAttention, color){
+  const s = slug(name);
+  return `
+    <details class="co-card" data-company="${name}">
+      <summary class="co-summary">
+        <span class="co-id"><span class="sw" style="background:${color}"></span>${name}${needsAttention ? '<span class="attn-badge">⚠ Needs Attention</span>' : ''}</span>
+        <span class="co-stats">
+          <span class="stat"><span class="stat-label">Sales</span><span class="stat-value">${peso(d.total_sales)}</span></span>
+          <span class="stat"><span class="stat-label">Orders</span><span class="stat-value">${num(d.total_orders)}</span></span>
+          <span class="stat"><span class="stat-label">Delivery</span><span class="stat-value ${d.delivery_pct>=80?'pct-good':''}">${d.delivery_pct.toFixed(1)}%</span></span>
+          <span class="stat"><span class="stat-label">RTS</span><span class="stat-value ${d.rts_pct>=18?'pct-bad':''}">${d.rts_pct.toFixed(1)}%</span></span>
+        </span>
+        <span class="chevron">⌄</span>
+      </summary>
+      <div class="co-body">
+        <div class="tabs" data-company="${name}">
+          <button class="tab-btn active" data-tab="overview">Overview</button>
+          <button class="tab-btn" data-tab="products">Products</button>
+          <button class="tab-btn" data-tab="rts">RTS Reasons</button>
+          <button class="tab-btn" data-tab="telesales">Tele-Sales</button>
+          <button class="tab-btn" data-tab="orders">Orders</button>
+        </div>
+        <div class="tab-panel active" data-panel="overview">
+          <div class="chart-wrap"><canvas id="trend-${s}"></canvas></div>
+          <div class="region-grid" id="regions-${s}"></div>
+        </div>
+        <div class="tab-panel" data-panel="products">
+          <div class="table-toolbar">
+            <input type="text" class="mini-search" id="psearch-${s}" placeholder="Filter product...">
+            <button class="export-btn" data-export="products">Export CSV</button>
+          </div>
+          <div class="table-wrap" id="tbl-products-${s}"></div>
+        </div>
+        <div class="tab-panel" data-panel="rts">
+          <div class="chart-wrap short"><canvas id="rtschart-${s}"></canvas></div>
+          <div class="table-toolbar">
+            <span></span>
+            <button class="export-btn" data-export="rts">Export CSV</button>
+          </div>
+          <div class="table-wrap" id="tbl-rts-${s}"></div>
+        </div>
+        <div class="tab-panel" data-panel="telesales">
+          <div class="table-toolbar">
+            <span></span>
+            <button class="export-btn" data-export="telesales">Export CSV</button>
+          </div>
+          <div class="table-wrap" id="tbl-telesales-${s}"></div>
+        </div>
+        <div class="tab-panel" data-panel="orders">
+          <div class="table-toolbar">
+            <input type="text" class="mini-search" id="osearch-${s}" placeholder="Search order ID or tracking #...">
+            <button class="export-btn" data-export="orders">Export CSV</button>
+          </div>
+          <div class="table-wrap" id="tbl-orders-${s}"><div class="table-empty">I-click ang tab para makita ang mga order.</div></div>
+          <div class="orders-note" id="onote-${s}"></div>
+        </div>
+      </div>
+    </details>`;
 }
 
 function regionCard(region, items, color){
@@ -316,46 +740,275 @@ function regionCard(region, items, color){
     </div>`;
 }
 
-function renderDetail(name, from, to){
-  const d = companyStats(name, from, to);
-  document.getElementById('detailName').textContent = name;
-  document.getElementById('detailSwatch').style.background = COMPANY_COLORS[name];
-  kpiRow(document.getElementById('detail-kpis'), d, 'Total Sales', 'Total Orders');
-  const regions = regionTop5(name, from, to);
-  const regionsEl = document.getElementById('detail-regions');
-  regionsEl.innerHTML = REGIONS.map(r=>regionCard(r, regions[r] || [], COMPANY_COLORS[name])).join('');
+function matchesSearch(company, from, to, term){
+  if(!term) return true;
+  const t = term.toLowerCase();
+  if(company.toLowerCase().includes(t)) return true;
+  const products = productPerformance(company, from, to);
+  if(products.some(p => p.product.toLowerCase().includes(t))) return true;
+  const handlers = telesalesPerf(company, from, to);
+  if(handlers.some(h => h.handler.toLowerCase().includes(t))) return true;
+  return false;
 }
 
-function openDetail(name){
-  currentCompany = name;
-  const {from, to} = getRange();
-  renderDetail(name, from, to);
-  document.getElementById('view-overview').classList.remove('active');
-  document.getElementById('view-detail').classList.add('active');
-  window.scrollTo({top:0, behavior:'instant'});
+function renderCompanyBody(name, from, to){
+  const s = slug(name);
+  const color = COMPANY_COLORS[name];
+
+  const regionsEl = document.getElementById(`regions-${s}`);
+  if(regionsEl){
+    const regions = regionTop5(name, from, to);
+    const visibleRegions = REGIONS.filter(r => FILTER.regions.has(r));
+    regionsEl.innerHTML = visibleRegions.length
+      ? visibleRegions.map(r=>regionCard(r, regions[r] || [], color)).join('')
+      : '<div class="region-empty">Walang region na pinili sa filters.</div>';
+  }
+  renderTrendChart(`trend-${s}`, dailyTrend(name, from, to));
+
+  const products = productPerformance(name, from, to);
+  const pFilter = (document.getElementById(`psearch-${s}`) || {}).value || '';
+  const filteredProducts = pFilter ? products.filter(p => p.product.toLowerCase().includes(pFilter.toLowerCase())) : products;
+  const productCols = [
+    {key:'product', label:'Product'},
+    {key:'orders', label:'Orders', render:r=>num(r.orders)},
+    {key:'delivered', label:'Delivered', render:r=>num(r.delivered)},
+    {key:'delivery_pct', label:'Delivery %', render:r=>`<span class="${r.delivery_pct>=80?'pct-good':''}">${r.delivery_pct.toFixed(1)}%</span>`},
+    {key:'rts_pct', label:'RTS %', render:r=>`<span class="${r.rts_pct>=18?'pct-bad':''}">${r.rts_pct.toFixed(1)}%</span>`},
+    {key:'sales', label:'Sales', render:r=>peso(r.sales)},
+  ];
+  renderTable(document.getElementById(`tbl-products-${s}`), filteredProducts, productCols, 'Walang product data sa date range na ito.');
+
+  const reasons = rtsReasonBreakdown(name, from, to);
+  renderRtsChart(`rtschart-${s}`, reasons);
+  const reasonCols = [
+    {key:'reason', label:'Return Reason'},
+    {key:'count', label:'Count', render:r=>num(r.count)},
+    {key:'share', label:'% of RTS', render:r=>`${r.share.toFixed(1)}%`},
+  ];
+  renderTable(document.getElementById(`tbl-rts-${s}`), reasons, reasonCols, 'Walang RTS sa date range na ito.');
+
+  const telesales = telesalesPerf(name, from, to);
+  const teleCols = [
+    {key:'handler', label:'Item Handler'},
+    {key:'count', label:'Upsell Orders', render:r=>num(r.count)},
+    {key:'sales', label:'Upsell Sales', render:r=>peso(r.sales)},
+  ];
+  renderTable(document.getElementById(`tbl-telesales-${s}`), telesales, teleCols, 'Walang Tele-Sales upsell sa date range na ito.');
 }
 
-document.getElementById('backBtn').addEventListener('click', ()=>{
-  currentCompany = null;
-  document.getElementById('view-detail').classList.remove('active');
-  document.getElementById('view-overview').classList.add('active');
-});
+function wireCompanyCard(card, name, from, to){
+  const s = slug(name);
+  let rendered = false;
+
+  const doRender = () => { renderCompanyBody(name, getRange().from, getRange().to); rendered = true; };
+
+  card.addEventListener('toggle', () => {
+    if(card.open && !rendered) doRender();
+  });
+
+  card.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      card.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      card.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      card.querySelector(`.tab-panel[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+    });
+  });
+
+  const psearch = card.querySelector(`#psearch-${s}`);
+  if(psearch){
+    psearch.addEventListener('input', () => { if(rendered) renderCompanyBody(name, getRange().from, getRange().to); });
+  }
+
+  let ordersLoaded = false;
+  const ordersTabBtn = card.querySelector('.tab-btn[data-tab="orders"]');
+  if(ordersTabBtn){
+    ordersTabBtn.addEventListener('click', () => {
+      if(!ordersLoaded){ ordersLoaded = true; loadOrdersTab(name, s); }
+    });
+  }
+  const osearch = card.querySelector(`#osearch-${s}`);
+  if(osearch){
+    let debounceTimer;
+    osearch.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => { ordersLoaded = true; loadOrdersTab(name, s); }, 350);
+    });
+  }
+
+  card.querySelectorAll('.export-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const {from, to} = getRange();
+      const kind = btn.dataset.export;
+      const stamp = new Date().toISOString().slice(0,10);
+      if(kind === 'products'){
+        const rows = productPerformance(name, from, to);
+        downloadCSV(`${name}-products-${stamp}.csv`, rows, [
+          {key:'product', label:'Product'}, {key:'orders', label:'Orders'}, {key:'delivered', label:'Delivered'},
+          {key:'delivery_pct', label:'Delivery %'}, {key:'rts_pct', label:'RTS %'}, {key:'sales', label:'Sales'}
+        ]);
+      } else if(kind === 'rts'){
+        const rows = rtsReasonBreakdown(name, from, to);
+        downloadCSV(`${name}-rts-reasons-${stamp}.csv`, rows, [
+          {key:'reason', label:'Return Reason'}, {key:'count', label:'Count'}, {key:'share', label:'% of RTS'}
+        ]);
+      } else if(kind === 'telesales'){
+        const rows = telesalesPerf(name, from, to);
+        downloadCSV(`${name}-telesales-${stamp}.csv`, rows, [
+          {key:'handler', label:'Item Handler'}, {key:'count', label:'Upsell Orders'}, {key:'sales', label:'Upsell Sales'}
+        ]);
+      } else if(kind === 'orders'){
+        const rows = ORDERS_CACHE[s] || [];
+        downloadCSV(`${name}-orders-${stamp}.csv`, rows, [
+          {key:'day_created', label:'Date'}, {key:'order_id', label:'Order ID'}, {key:'tracking_number', label:'Tracking #'},
+          {key:'status', label:'Status'}, {key:'product_name', label:'Product'}, {key:'region_norm', label:'Region'},
+          {key:'unit_price', label:'Price'}, {key:'item_handler', label:'Item Handler'}, {key:'rts_reason_norm', label:'RTS Reason'}
+        ]);
+      }
+    });
+  });
+
+  if(card.open) doRender();
+}
+
+function renderOverview(from, to){
+  const kpiEl = document.getElementById('ov-kpis');
+  kpiEl.classList.add('has5');
+  kpiRow(kpiEl, overviewStats(from, to), 'Total Sales (lahat)', 'Total Orders');
+  renderStatusBreakdown(from, to);
+
+  let attnCount = 0;
+  const names = Object.keys(DATA.companies);
+  const searchVisible = names.filter(name => matchesSearch(name, from, to, searchTerm));
+
+  const cards = names.map(name=>{
+    const d = companyStats(name, from, to);
+    const needsAttention = d.rts_pct >= ATTENTION_RTS_THRESHOLD;
+    if(needsAttention) attnCount++;
+    let hidden = !searchVisible.includes(name) || !FILTER.companies.has(name);
+    if(FILTER.attentionOnly && !needsAttention) hidden = true;
+    return { name, html: companyCardHTML(name, d, needsAttention, COMPANY_COLORS[name]), hidden };
+  });
+
+  const listEl = document.getElementById('company-list');
+  listEl.innerHTML = cards.map(c => c.html).join('');
+  cards.forEach((c, i) => {
+    const el = listEl.children[i];
+    el.style.display = c.hidden ? 'none' : '';
+    wireCompanyCard(el, c.name, from, to);
+  });
+
+  document.getElementById('noResults').style.display = cards.every(c=>c.hidden) ? '' : 'none';
+  kpiEl.insertAdjacentHTML('beforeend', `<div class="kpi critical"><div class="label">Needs Attention</div><div class="value">${attnCount}</div><div class="sub">Company/companies na RTS% &ge; ${ATTENTION_RTS_THRESHOLD}%</div></div>`);
+}
 
 function renderCurrent(){
   if(!DATA) return;
   const {from, to} = getRange();
   document.getElementById('rangeNote').textContent = from && to ? `${from} → ${to}` : '';
-  if(currentCompany){
-    renderDetail(currentCompany, from, to);
-  } else {
-    renderOverview(from, to);
-  }
+  renderOverview(from, to);
 }
 
-document.getElementById('dateFrom').addEventListener('change', renderCurrent);
-document.getElementById('dateTo').addEventListener('change', renderCurrent);
+function clearPresetActive(){
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+}
+
+document.getElementById('dateFrom').addEventListener('change', ()=>{ clearPresetActive(); renderCurrent(); });
+document.getElementById('dateTo').addEventListener('change', ()=>{ clearPresetActive(); renderCurrent(); });
 document.getElementById('dateReset').addEventListener('click', ()=>{
   setRange(monthToDateRange());
+  clearPresetActive();
+  document.querySelector('.preset-btn[data-preset="month"]').classList.add('active');
+  renderCurrent();
+});
+
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    clearPresetActive();
+    btn.classList.add('active');
+    setRange(presetRange(btn.dataset.preset));
+    renderCurrent();
+  });
+});
+
+function openFilterPanel(){
+  document.getElementById('filterPanel').classList.add('show');
+  document.getElementById('filterOverlay').classList.add('show');
+}
+function closeFilterPanel(){
+  document.getElementById('filterPanel').classList.remove('show');
+  document.getElementById('filterOverlay').classList.remove('show');
+}
+document.getElementById('funnelBtn').addEventListener('click', openFilterPanel);
+document.getElementById('filterClose').addEventListener('click', closeFilterPanel);
+document.getElementById('filterOverlay').addEventListener('click', closeFilterPanel);
+
+function updateFunnelBadge(){
+  const totalCompanies = DATA ? Object.keys(DATA.companies).length : 0;
+  const activeFilters = (FILTER.companies.size < totalCompanies ? 1 : 0)
+    + (FILTER.regions.size < REGIONS.length ? 1 : 0)
+    + (FILTER.attentionOnly ? 1 : 0);
+  const btn = document.getElementById('funnelBtn');
+  const badge = document.getElementById('funnelCount');
+  btn.classList.toggle('active', activeFilters > 0);
+  badge.style.display = activeFilters > 0 ? '' : 'none';
+  badge.textContent = activeFilters;
+}
+
+function renderFilterOptions(){
+  if(!DATA) return;
+  const compEl = document.getElementById('filterCompanies');
+  compEl.innerHTML = Object.keys(DATA.companies).map(name => `
+    <label class="filter-check"><input type="checkbox" data-company="${name}" ${FILTER.companies.has(name)?'checked':''}> ${name}</label>
+  `).join('');
+  compEl.querySelectorAll('input[data-company]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      if(cb.checked) FILTER.companies.add(cb.dataset.company); else FILTER.companies.delete(cb.dataset.company);
+      updateFunnelBadge();
+      renderCurrent();
+    });
+  });
+
+  const regEl = document.getElementById('filterRegions');
+  regEl.innerHTML = REGIONS.map(r => `
+    <label class="filter-check"><input type="checkbox" data-region="${r}" ${FILTER.regions.has(r)?'checked':''}> ${r}</label>
+  `).join('');
+  regEl.querySelectorAll('input[data-region]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      if(cb.checked) FILTER.regions.add(cb.dataset.region); else FILTER.regions.delete(cb.dataset.region);
+      updateFunnelBadge();
+      renderCurrent();
+    });
+  });
+}
+
+document.getElementById('filterAttention').addEventListener('change', (e) => {
+  FILTER.attentionOnly = e.target.checked;
+  updateFunnelBadge();
+  renderCurrent();
+});
+
+document.getElementById('filterReset').addEventListener('click', () => {
+  if(DATA) FILTER.companies = new Set(Object.keys(DATA.companies));
+  FILTER.regions = new Set(REGIONS);
+  FILTER.attentionOnly = false;
+  document.getElementById('filterAttention').checked = false;
+  renderFilterOptions();
+  updateFunnelBadge();
+  renderCurrent();
+});
+
+const searchInput = document.getElementById('globalSearch');
+const searchClearBtn = document.getElementById('searchClear');
+searchInput.addEventListener('input', () => {
+  searchTerm = searchInput.value.trim();
+  searchClearBtn.classList.toggle('show', !!searchTerm);
+  renderCurrent();
+});
+searchClearBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  searchTerm = '';
+  searchClearBtn.classList.remove('show');
   renderCurrent();
 });
 
@@ -364,23 +1017,81 @@ function setAsOf(iso){
   document.getElementById('asOf').textContent = 'As of ' + d.toLocaleString('en-PH', {dateStyle:'medium', timeStyle:'short'});
 }
 
+async function fetchAllRows(view){
+  const rows = [];
+  let offset = 0;
+  for(;;){
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${view}?select=*`, {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        Range: `${offset}-${offset + PAGE_SIZE - 1}`,
+      },
+      cache: 'no-store',
+    });
+    if(!res.ok && res.status !== 206) throw new Error(`${view} HTTP ${res.status}`);
+    const page = await res.json();
+    rows.push(...page);
+    if(page.length < PAGE_SIZE) break;
+    offset += PAGE_SIZE;
+  }
+  return rows;
+}
+
+function groupByCompany(rows){
+  const byCompany = {};
+  for(const r of rows){
+    if(!byCompany[r.company]) byCompany[r.company] = [];
+    byCompany[r.company].push(r);
+  }
+  return byCompany;
+}
+
 async function loadData(){
   try{
-    const res = await fetch('data.json?t=' + Date.now(), {cache:'no-store'});
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const fresh = await res.json();
-    DATA = fresh;
+    const [daily, regionProduct, rtsReasons, telesales, statusDaily, metaRows] = await Promise.all([
+      fetchAllRows('v_daily_stats'),
+      fetchAllRows('v_region_product_daily'),
+      fetchAllRows('v_rts_reasons_daily'),
+      fetchAllRows('v_telesales_daily'),
+      fetchAllRows('v_status_daily'),
+      fetchAllRows('v_meta'),
+    ]);
+
+    const dailyByCo = groupByCompany(daily);
+    const rpdByCo = groupByCompany(regionProduct);
+    const reasonsByCo = groupByCompany(rtsReasons);
+    const teleByCo = groupByCompany(telesales);
+    const statusByCo = groupByCompany(statusDaily);
+
+    const companies = {};
+    for(const name of Object.keys(dailyByCo)) {
+      companies[name] = {
+        daily: (dailyByCo[name] || []).map(r => ({date:r.date, orders:r.orders, delivered:r.delivered, rts:r.rts, sales:r.sales})),
+        region_product_daily: (rpdByCo[name] || []).map(r => ({date:r.date, region:r.region, product:r.product, orders:r.orders, delivered:r.delivered, rts:r.rts, sales:r.sales})),
+        rts_reasons_daily: (reasonsByCo[name] || []).map(r => ({date:r.date, reason:r.reason, count:r.count})),
+        telesales_daily: (teleByCo[name] || []).map(r => ({date:r.date, handler:r.handler, count:r.count, sales:r.sales})),
+        status_daily: (statusByCo[name] || []).map(r => ({date:r.date, status:r.status, count:r.count, value:r.value})),
+      };
+    }
+
+    DATA = { companies, generated_at: (metaRows[0] && metaRows[0].last_synced_at) || new Date().toISOString() };
     Object.keys(DATA.companies).forEach((c,i)=>{ COMPANY_COLORS[c] = css(`--${SLOTS[i % SLOTS.length]}`); });
+    Object.keys(DATA.companies).forEach(name => {
+      if(!KNOWN_COMPANIES.has(name)){ KNOWN_COMPANIES.add(name); FILTER.companies.add(name); }
+    });
+    renderFilterOptions();
+    updateFunnelBadge();
     document.getElementById('loadNote').style.display = 'none';
     if(firstLoad){
       setRange(monthToDateRange());
-      document.getElementById('view-overview').classList.add('active');
       firstLoad = false;
     }
     renderCurrent();
     setAsOf(DATA.generated_at);
   }catch(err){
-    document.getElementById('loadNote').textContent = 'Hindi makuha ang data.json (' + err.message + '). Susubukan ulit...';
+    document.getElementById('loadNote').style.display = '';
+    document.getElementById('loadNote').textContent = 'Hindi makuha ang data mula sa database (' + err.message + '). Susubukan ulit...';
   }
 }
 
